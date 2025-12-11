@@ -118,7 +118,7 @@
         <section class="space-y-4">
             <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">3. การแบ่งรายได้รายไตรมาส (ประมาณการ)</h2>
             <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <p class="text-sm text-gray-600 mb-4">การคำนวณนี้จะหักค่าใช้จ่ายคงที่รายปีออกเป็นรายไตรมาส (<span id="quarterlyExpenseDisplay">1,375.00</span> บาทต่อไตรมาส) จากรายรับรวมของไตรมาสที่คาดว่าจะได้รับ และแบ่งกำไรสุทธิที่เหลือเข้าสู่ 10 กองทุนที่กำหนดไว้</p>
+                <p class="text-sm text-gray-600 mb-4">การคำนวณนี้จะหักค่าใช้จ่ายคงที่รายปีออกเป็นรายไตรมาส (<span id="quarterlyExpenseDisplay">1,375.00</span> บาทต่อไตรมาส) จากรายรับรวมของไตรมาสที่คาดว่าจะได้รับ และแบ่งกำไรสุทธิที่เหลือเข้าสู่ <span class="font-bold">3 กองทุน</span>ที่กำหนดไว้</p>
                 <div id="quarterlyBreakdown" class="space-y-4">
                     <!-- Quarterly results will be rendered here by JS -->
                 </div>
@@ -128,11 +128,11 @@
 
         <!-- NEW SECTION 4 (formerly 3): Investment Allocation -->
         <section class="space-y-4">
-            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">4. การแบ่งสัดส่วนลงทุน (10 กองทุน)</h2>
+            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">4. การแบ่งสัดส่วนลงทุน (3 กองทุน)</h2>
             
             <!-- Edit Button and Description -->
             <div class="flex justify-between items-center mb-2">
-                <p class="text-gray-600 text-sm">การแบ่งเงินลงทุนเริ่มต้น 35,000 บาท ออกเป็น 10 ส่วน (ส่วนละ 3,500 บาท)</p>
+                <p class="text-gray-600 text-sm">การแบ่งเงินลงทุนเริ่มต้น 35,000 บาท ออกเป็น 3 ส่วน (ส่วนละประมาณ 11,666.67 บาท)</p>
                 <button id="editFundsButton" onclick="toggleEditMode(true)" 
                         class="px-4 py-2 bg-indigo-500 text-white text-sm font-medium rounded-lg hover:bg-indigo-600 transition duration-150 shadow-md">
                     แก้ไขชื่อกองทุน
@@ -140,14 +140,15 @@
             </div>
 
             <!-- Display Mode (Funds Boxes) -->
-            <div id="fundAllocationContainer" class="grid grid-cols-5 sm:grid-cols-10 gap-2">
-                <p class="col-span-10 text-center text-gray-500">กำลังโหลดข้อมูลกองทุน...</p>
+            <div id="fundAllocationContainer" class="grid grid-cols-3 sm:grid-cols-3 gap-4">
+                <p class="col-span-3 text-center text-gray-500">กำลังโหลดข้อมูลกองทุน...</p>
             </div>
 
             <!-- Edit Mode (Input Fields) -->
             <div id="fundEditContainer" class="hidden space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-800">แก้ไขรายชื่อ 10 กองทุน</h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="fundEditInputs">
+                <h3 class="text-lg font-semibold text-gray-800">แก้ไขรายชื่อ 3 กองทุน</h3>
+                <!-- Adjusted grid for 3 inputs -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="fundEditInputs">
                     <!-- Input fields will be rendered here by JS -->
                 </div>
                 <div class="flex justify-end space-x-3">
@@ -294,8 +295,8 @@
         const INITIAL_INVESTMENT = 35000;
         const DAYS_PER_YEAR = 365;
         const TARGET_PAYBACK_YEARS = 2;
-        const NUMBER_OF_FUNDS = 10;
-        const FUND_AMOUNT = INITIAL_INVESTMENT / NUMBER_OF_FUNDS;
+        const NUMBER_OF_FUNDS = 3; // FIXED: Changed from 10 to 3
+        const FUND_AMOUNT = INITIAL_INVESTMENT / NUMBER_OF_FUNDS; // 35000 / 3
         
         // Arrays for Month/Quarter Mapping (used in Section 6)
         const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -512,7 +513,7 @@
                 const netQuarterlyIncome = quarterlyRevenue - quarterlyExpense; // Use dynamic quarterlyExpense
                 totalNetRevenueYear += netQuarterlyIncome;
                 
-                const netIncomePerFund = netQuarterlyIncome / NUMBER_OF_FUNDS;
+                const netIncomePerFund = netQuarterlyIncome / NUMBER_OF_FUNDS; // Use 3 funds
 
                 outputHtml += `
                     <div class="p-3 bg-white rounded-lg shadow-sm border border-gray-100">
@@ -530,7 +531,7 @@
                             <span>${formatCurrency(netQuarterlyIncome)} บาท</span>
                         </div>
                         <div class="flex justify-between text-sm font-semibold pt-1 text-gray-700">
-                            <span>แบ่งเข้า 10 กองทุน (ต่อกองทุน):</span>
+                            <span>แบ่งเข้า 3 กองทุน (ต่อกองทุน):</span>
                             <span class="${netIncomePerFund >= 0 ? 'text-green-600' : 'text-red-600'}">${formatCurrency(netIncomePerFund)} บาท</span>
                         </div>
                     </div>
@@ -583,7 +584,7 @@
                 totalAnnualRevenue += actualQRevenue;
 
                 const actualQNetIncome = actualQRevenue - quarterlyExpense; // Use dynamic quarterlyExpense
-                const actualQNetIncomePerFund = actualQNetIncome / NUMBER_OF_FUNDS;
+                const actualQNetIncomePerFund = actualQNetIncome / NUMBER_OF_FUNDS; // Use 3 funds
                 totalAnnualNetIncome += actualQNetIncome;
                 
                 const colorClass = actualQNetIncome >= 0 ? 'text-green-700' : 'text-red-700';
@@ -612,7 +613,7 @@
                             <span class="${colorClass}">${formatCurrency(actualQNetIncome)} บาท</span>
                         </div>
                         <div class="flex justify-between text-sm font-semibold pt-1">
-                            <span>แบ่งเข้า 10 กองทุน (ต่อกองทุน):</span>
+                            <span>แบ่งเข้า 3 กองทุน (ต่อกองทุน):</span>
                             <span class="${colorClass}">${formatCurrency(actualQNetIncomePerFund)} บาท</span>
                         </div>
                     </div>
@@ -844,7 +845,7 @@
 
 
             // Quarterly breakdown
-            csvContent += "ผลลัพธ์รายไตรมาส,ไตรมาส,รายรับรวม,หักค่าใช้จ่าย,กำไรสุทธิ,แบ่งเข้า 10 กองทุน (ต่อกองทุน)\n";
+            csvContent += "ผลลัพธ์รายไตรมาส,ไตรมาส,รายรับรวม,หักค่าใช้จ่าย,กำไรสุทธิ,แบ่งเข้า 3 กองทุน (ต่อกองทุน)\n";
             QUARTER_NAMES.forEach(qName => {
                 const qData = currentAnnualData.quarterly[qName];
                 if (qData) {
@@ -881,7 +882,8 @@
             
             fundNames.forEach((name, index) => {
                 const fundBox = document.createElement('div');
-                fundBox.className = 'p-2 text-center bg-gray-100 rounded-md hover:bg-indigo-100 transition duration-300 cursor-default';
+                // Adjusted grid-cols-4 or grid-cols-6 to grid-cols-3 (since we have 3 funds now)
+                fundBox.className = 'p-2 text-center bg-gray-100 rounded-md hover:bg-indigo-100 transition duration-300 cursor-default col-span-1'; 
                 fundBox.title = `${name}: ${formattedFund} บาท`;
                 fundBox.innerHTML = `
                     <p class="text-xs font-semibold text-gray-700">${index + 1}.</p>
@@ -904,17 +906,19 @@
                 editContainer.classList.remove('hidden');
 
                 inputContainer.innerHTML = '';
-                fundNames.forEach((name, index) => {
+                // Only loop 3 times now
+                for (let i = 0; i < NUMBER_OF_FUNDS; i++) {
+                    const name = fundNames[i] || `กองทุนที่ ${i + 1}`;
                     const label = document.createElement('label');
                     label.className = 'block';
                     label.innerHTML = `
-                        <span class="text-xs font-medium text-gray-500">กองทุนที่ ${index + 1}</span>
-                        <input type="text" id="fundInput${index}" value="${name}" 
+                        <span class="text-xs font-medium text-gray-500">กองทุนที่ ${i + 1}</span>
+                        <input type="text" id="fundInput${i}" value="${name}" 
                                class="input-style w-full mt-1 text-sm text-gray-700 px-3 py-2" 
                                placeholder="ชื่อกองทุน" maxlength="20">
                     `;
                     inputContainer.appendChild(label);
-                });
+                }
 
             } else {
                 editContainer.classList.add('hidden');
@@ -930,6 +934,7 @@
             }
 
             const newFundNames = [];
+            // Loop only for NUMBER_OF_FUNDS (3)
             for (let i = 0; i < NUMBER_OF_FUNDS; i++) {
                 const input = document.getElementById(`fundInput${i}`);
                 
@@ -946,7 +951,8 @@
             toggleEditMode(false); 
             
             try {
-                await setDocWithRetry(fundDocRef(userId), { names: fundNames });
+                // Ensure saving only 3 names
+                await setDocWithRetry(fundDocRef(userId), { names: newFundNames.slice(0, NUMBER_OF_FUNDS) }); 
                 console.log("Fund names saved successfully!");
             } catch (e) {
                 console.error("Error saving document: ", e);
@@ -957,12 +963,13 @@
             if (!db || !userId) return;
             
             onSnapshot(fundDocRef(userId), (docSnapshot) => {
+                // Only create default names based on NUMBER_OF_FUNDS (3)
                 const defaultNames = Array.from({ length: NUMBER_OF_FUNDS }, (_, i) => `กองทุนที่ ${i + 1}`);
                 
                 if (docSnapshot.exists()) {
                     const data = docSnapshot.data();
-                    if (data && Array.isArray(data.names) && data.names.length === NUMBER_OF_FUNDS) {
-                        fundNames = data.names;
+                    if (data && Array.isArray(data.names) && data.names.length >= NUMBER_OF_FUNDS) {
+                        fundNames = data.names.slice(0, NUMBER_OF_FUNDS); // Take only the first 3
                         console.log("Fund names loaded from Firestore.");
                     } else {
                         console.warn("Firestore data structure invalid. Using default names.");
