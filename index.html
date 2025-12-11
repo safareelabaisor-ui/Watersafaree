@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เครื่องคำนวณ ROI ตู้กดน้ำหยอดเหรียญ</title>
+    <!-- โหลด Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- ใช้ฟอนต์ Inter สำหรับความมินิมอลและอ่านง่าย -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght=100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7fafc; /* Very light gray background */
+        }
+        /* Custom styles for the sleek card look */
+        .card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+        .input-style {
+            border: 1px solid #e2e8f0;
+            padding: 10px 15px;
+            border-radius: 0.5rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .input-style:focus {
+            outline: none;
+            border-color: #4f46e5; /* Indigo focus color */
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-4xl bg-white card rounded-xl p-8 space-y-8">
+        <!-- Header -->
+        <header class="text-center space-y-2">
+            <h1 class="text-4xl font-extrabold text-gray-900 border-b-2 pb-2 border-indigo-100">
+                เครื่องคำนวณ ROI การลงทุนตู้กดน้ำ
+            </h1>
+            <p class="text-lg text-gray-500">การวิเคราะห์ความคุ้มทุนสำหรับตู้กดน้ำหยอดเหรียญ</p>
+        </header>
+
+        <!-- Fixed Investment & Expense Card -->
+        <div class="grid md:grid-cols-2 gap-6 p-6 bg-indigo-50 rounded-lg">
+            <div>
+                <h2 class="text-xl font-semibold text-indigo-700 mb-2">ยอดลงทุนเริ่มต้น</h2>
+                <div class="text-3xl font-bold text-indigo-900" id="totalInvestmentDisplay">35,000.00 บาท</div>
+                <p class="text-sm text-gray-500 mt-1">ยอดรวมในการติดตั้งและจัดซื้อตู้กดน้ำ</p>
+            </div>
+            <!-- UPDATED EXPENSE SECTION -->
+            <div>
+                <h2 class="text-xl font-semibold text-red-700 mb-2">ค่าใช้จ่ายคงที่รายปี (รวม 5,500.00 บาท)</h2>
+                <div class="space-y-1">
+                    <div class="flex justify-between text-lg font-medium text-red-900">
+                        <span>ค่าเปลี่ยนไส้กรอง:</span>
+                        <span id="filterExpense">3,000.00 บาท</span>
+                    </div>
+                    <div class="flex justify-between text-lg font-medium text-red-900">
+                        <span>ค่าซ่อมอุปกรณ์:</span>
+                        <span id="repairExpense">1,000.00 บาท</span>
+                    </div>
+                    <div class="flex justify-between text-lg font-medium text-red-900">
+                        <span>ค่าน้ำค่าไฟ:</span>
+                        <span id="waterElectricityExpense">1,500.00 บาท</span>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-500 mt-1">ค่าใช้จ่ายรวมต่อปีที่นำไปคำนวณกำไรสุทธิ</p>
+            </div>
+        </div>
+
+        <!-- Input Section -->
+        <section class="space-y-4">
+            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">1. กรอกข้อมูลรายได้ (ประมาณการรายวัน)</h2>
+            <div>
+                <label for="dailyRevenue" class="block text-sm font-medium text-gray-700 mb-1">
+                    รายได้โดยประมาณต่อวัน (บาท)
+                </label>
+                <input type="number" id="dailyRevenue" value="100" min="0" step="10" 
+                       class="input-style w-full text-2xl text-gray-800" 
+                       placeholder="เช่น 100" oninput="calculateROI()">
+                <p class="text-xs text-gray-400 mt-1">ป้อนรายได้เฉลี่ยที่คาดว่าจะได้รับในแต่ละวัน เพื่อคำนวณ ROI ภาพรวม</p>
+            </div>
+        </section>
+
+        <!-- Output/Result Section -->
+        <section class="space-y-6">
+            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">2. ผลการคำนวณ ROI (ภาพรวม)</h2>
+            
+            <!-- Result Grid -->
+            <div class="grid md:grid-cols-3 gap-4 text-center">
+                
+                <div class="p-5 bg-green-50 rounded-lg card">
+                    <p class="text-sm font-medium text-green-700">รายรับรวมรายปี</p>
+                    <p class="text-3xl font-bold text-green-900 mt-1" id="annualRevenueResult">0.00</p>
+                    <p class="text-sm text-gray-500">บาท</p>
+                </div>
+
+                <div class="p-5 bg-blue-50 rounded-lg card">
+                    <p class="text-sm font-medium text-blue-700">กำไรสุทธิรายปี</p>
+                    <p class="text-3xl font-bold text-blue-900 mt-1" id="annualNetProfitResult">0.00</p>
+                    <p class="text-sm text-gray-500">บาท (หลังหักค่าใช้จ่าย)</p>
+                </div>
+
+                <div class="p-5 bg-yellow-50 rounded-lg card border-2 border-yellow-300">
+                    <p class="text-sm font-medium text-yellow-800">ระยะเวลาคืนทุน (เป้าหมาย 2 ปี)</p>
+                    <p class="text-3xl font-bold text-yellow-900 mt-1" id="paybackPeriodResult">0 ปี 0 เดือน</p>
+                    <p class="text-xs text-yellow-700 mt-1" id="paybackStatus"></p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Investment Allocation Section -->
+        <section class="space-y-4">
+            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">3. การแบ่งสัดส่วนลงทุน (10 กองทุน)</h2>
+            
+            <!-- Edit Button and Description -->
+            <div class="flex justify-between items-center mb-2">
+                <p class="text-gray-600 text-sm">การแบ่งเงินลงทุนเริ่มต้น 35,000 บาท ออกเป็น 10 ส่วน (ส่วนละ 3,500 บาท)</p>
+                <button id="editFundsButton" onclick="toggleEditMode(true)" 
+                        class="px-4 py-2 bg-indigo-500 text-white text-sm font-medium rounded-lg hover:bg-indigo-600 transition duration-150 shadow-md">
+                    แก้ไขชื่อกองทุน
+                </button>
+            </div>
+
+            <!-- Display Mode (Funds Boxes) -->
+            <div id="fundAllocationContainer" class="grid grid-cols-5 sm:grid-cols-10 gap-2">
+                <p class="col-span-10 text-center text-gray-500">กำลังโหลดข้อมูลกองทุน...</p>
+            </div>
+
+            <!-- Edit Mode (Input Fields) -->
+            <div id="fundEditContainer" class="hidden space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-800">แก้ไขรายชื่อ 10 กองทุน</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="fundEditInputs">
+                    <!-- Input fields will be rendered here by JS -->
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button onclick="toggleEditMode(false)" class="px-4 py-2 text-sm text-gray-700 bg-white border rounded-lg hover:bg-gray-100 transition">
+                        ยกเลิก
+                    </button>
+                    <button onclick="saveFundNames()" id="saveFundsButton" class="px-4 py-2 text-sm text-white bg-green-600 rounded-lg hover:bg-green-700 transition">
+                        บันทึกการแก้ไข
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- SECTION 4: Summary and Assumptions -->
+        <section class="space-y-4">
+            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">4. บทสรุปและสมมติฐานการคำนวณ</h2>
+            <div class="space-y-2 text-gray-700 p-4 bg-gray-50 rounded-lg">
+                <p class="font-bold text-gray-800">สมมติฐานหลัก:</p>
+                <ul class="list-disc list-inside space-y-1 ml-4 text-sm">
+                    <li>ยอดลงทุนเริ่มต้น (Initial Investment): <span class="font-semibold text-indigo-600">35,000.00 บาท</span></li>
+                    <li>เป้าหมายระยะเวลาคืนทุน: <span class="font-semibold text-yellow-600">2 ปี</span> (24 เดือน)</li>
+                    <li>จำนวนวันในการดำเนินการ: <span class="font-semibold">365 วันต่อปี</span></li>
+                </ul>
+                <p class="font-bold text-gray-800 mt-3">รายละเอียดค่าใช้จ่ายคงที่รายปี:</p>
+                <ul class="list-disc list-inside space-y-1 ml-4 text-sm">
+                    <li>ค่าเปลี่ยนไส้กรอง: <span class="font-semibold text-red-600">3,000.00 บาท</span></li>
+                    <li>ค่าซ่อมอุปกรณ์: <span class="font-semibold text-red-600">1,000.00 บาท</span></li>
+                    <li>ค่าน้ำค่าไฟ: <span class="font-semibold text-red-600">1,500.00 บาท</span></li>
+                    <li>รวมค่าใช้จ่ายต่อปี (ANNUAL EXPENSE): <span class="font-bold text-red-700">5,500.00 บาท</span></li>
+                </ul>
+                <p class="text-xs text-gray-500 mt-4">*การคำนวณนี้เป็นประมาณการเบื้องต้น ไม่รวมภาษี ค่าเช่าพื้นที่ และต้นทุนน้ำ</p>
+            </div>
+        </section>
+
+        <!-- SECTION 5: Quarterly Revenue Breakdown (Estimated) -->
+        <section class="space-y-4">
+            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">5. การแบ่งรายได้รายไตรมาส (ประมาณการ)</h2>
+            <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <p class="text-sm text-gray-600 mb-4">การคำนวณนี้จะหักค่าใช้จ่ายคงที่รายปีออกเป็นรายไตรมาส (1,375.00 บาทต่อไตรมาส) จากรายรับรวมของไตรมาสที่คาดว่าจะได้รับ และแบ่งกำไรสุทธิที่เหลือเข้าสู่ 10 กองทุนที่กำหนดไว้</p>
+                <div id="quarterlyBreakdown" class="space-y-4">
+                    <!-- Quarterly results will be rendered here by JS -->
+                </div>
+                <p id="quarterlyTotal" class="text-lg font-bold text-gray-800 mt-4 pt-3 border-t border-gray-300"></p>
+            </div>
+        </section>
+        
+        <!-- NEW SECTION 6: Actual Annual Revenue Recording (Monthly Input) -->
+        <section class="space-y-4">
+            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">6. บันทึกและคำนวณรายรับจริงรายไตรมาส (รายเดือน)</h2>
+            <p class="text-sm text-indigo-700 font-medium">กรอกรายรับจริงรายเดือนเพื่อคำนวณกำไรสุทธิ 4 ไตรมาส</p>
+            
+            <div class="space-y-3">
+                <p class="text-sm font-medium text-gray-700 mb-1">กรอกรายรับจริง (บาท) แยกรายเดือน:</p>
+                
+                <!-- ADJUSTED GRID LAYOUT FOR BETTER INPUT VISIBILITY -->
+                <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-4" id="monthlyInputGrid">
+                    <!-- Input 1: Jan (ใช้ค่าเริ่มต้นที่เหมาะสม) -->
+                    <div><label for="actualJanRevenue" class="block text-xs font-medium text-gray-500">ม.ค.</label><input type="number" id="actualJanRevenue" value="3720" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ม.ค." oninput="calculateActualAnnualRevenue(true)"></div>
+                    <!-- Input 2: Feb -->
+                    <div><label for="actualFebRevenue" class="block text-xs font-medium text-gray-500">ก.พ.</label><input type="number" id="actualFebRevenue" value="3360" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ก.พ." oninput="calculateActualAnnualRevenue(true)"></div>
+                    <!-- Input 3: Mar -->
+                    <div><label for="actualMarRevenue" class="block text-xs font-medium text-gray-500">มี.ค.</label><input type="number" id="actualMarRevenue" value="3720" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="มี.ค." oninput="calculateActualAnnualRevenue(true)"></div>
+                    
+                    <!-- Input 4: Apr -->
+                    <div><label for="actualAprRevenue" class="block text-xs font-medium text-gray-500">เม.ย.</label><input type="number" id="actualAprRevenue" value="3000" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="เม.ย." oninput="calculateActualAnnualRevenue(true)"></div>
+                    <!-- Input 5: May -->
+                    <div><label for="actualMayRevenue" class="block text-xs font-medium text-gray-500">พ.ค.</label><input type="number" id="actualMayRevenue" value="3500" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="พ.ค." oninput="calculateActualAnnualRevenue(true)"></div>
+                    <!-- Input 6: Jun -->
+                    <div><label for="actualJunRevenue" class="block text-xs font-medium text-gray-500">มิ.ย.</label><input type="number" id="actualJunRevenue" value="3000" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="มิ.ย." oninput="calculateActualAnnualRevenue(true)"></div>
+
+                    <!-- Input 7: Jul -->
+                    <div><label for="actualJulRevenue" class="block text-xs font-medium text-gray-500">ก.ค.</label><input type="number" id="actualJulRevenue" value="3800" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ก.ค." oninput="calculateActualAnnualRevenue(true)"></div>
+                    <!-- Input 8: Aug -->
+                    <div><label for="actualAugRevenue" class="block text-xs font-medium text-gray-500">ส.ค.</label><input type="number" id="actualAugRevenue" value="3800" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ส.ค." oninput="calculateActualAnnualRevenue(true)"></div>
+                    <!-- Input 9: Sep -->
+                    <div><label for="actualSepRevenue" class="block text-xs font-medium text-gray-500">ก.ย.</label><input type="number" id="actualSepRevenue" value="3200" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ก.ย." oninput="calculateActualAnnualRevenue(true)"></div>
+                    
+                    <!-- Input 10: Oct -->
+                    <div><label for="actualOctRevenue" class="block text-xs font-medium text-gray-500">ต.ค.</label><input type="number" id="actualOctRevenue" value="3600" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ต.ค." oninput="calculateActualAnnualRevenue(true)"></div>
+                    <!-- Input 11: Nov -->
+                    <div><label for="actualNovRevenue" class="block text-xs font-medium text-gray-500">พ.ย.</label><input type="number" id="actualNovRevenue" value="3100" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="พ.ย." oninput="calculateActualAnnualRevenue(true)"></div>
+                    <!-- Input 12: Dec -->
+                    <div><label for="actualDecRevenue" class="block text-xs font-medium text-gray-500">ธ.ค.</label><input type="number" id="actualDecRevenue" value="4000" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ธ.ค." oninput="calculateActualAnnualRevenue(true)"></div>
+                </div>
+
+                <p class="text-xs text-gray-400 pt-1">รายรับรวมจะถูกนำมาหักค่าใช้จ่ายคงที่รายไตรมาส (1,375.00 บาท) ข้อมูลจะถูกบันทึกอัตโนมัติ</p>
+                <button onclick="exportDataToCSV()" 
+                        class="mt-3 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition duration-150 shadow-md">
+                    ส่งออกข้อมูลเป็น CSV (เปิดใน Excel ได้)
+                </button>
+            </div>
+
+            <div id="actualQ1Result" class="p-4 bg-white border border-indigo-200 rounded-lg shadow-md space-y-4">
+                <p class="text-center text-gray-500">กรอกรายรับจริงต่อเดือนเพื่อดูผลลัพธ์รายไตรมาส</p>
+            </div>
+        </section>
+        
+        <!-- User ID Display for debugging/collaboration (Mandatory) -->
+        <p class="text-xs text-gray-400 mt-4" id="userIdDisplay">User ID: N/A</p>
+    </div>
+
+    <script type="module">
+        // --- Firebase Imports ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        // --- Global Constants and Arrays for Monthly/Quarterly Calculation ---
+        const INITIAL_INVESTMENT = 35000;
+        
+        // แยกค่าใช้จ่าย
+        const FILTER_EXPENSE = 3000;
+        const REPAIR_EXPENSE = 1000;
+        const WATER_ELECTRICITY_EXPENSE = 1500; 
+        
+        // ค่าใช้จ่ายรวมต่อปี
+        const ANNUAL_EXPENSE = FILTER_EXPENSE + REPAIR_EXPENSE + WATER_ELECTRICITY_EXPENSE; // 5500
+
+        const DAYS_PER_YEAR = 365;
+        const DAYS_PER_QUARTER = DAYS_PER_YEAR / 4; // 91.25 days per quarter (used for estimation in Section 5)
+        const QUARTERLY_EXPENSE = ANNUAL_EXPENSE / 4; // 5500 / 4 = 1375
+
+        const TARGET_PAYBACK_YEARS = 2;
+        const NUMBER_OF_FUNDS = 10;
+        const FUND_AMOUNT = INITIAL_INVESTMENT / NUMBER_OF_FUNDS;
+        
+        // Arrays for Month/Quarter Mapping (used in Section 6)
+        const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const MONTH_NAMES_THAI = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+        const QUARTER_NAMES = ['Q1', 'Q2', 'Q3', 'Q4'];
+        const QUARTER_MONTHS = [
+            ['Jan', 'Feb', 'Mar'], // Q1
+            ['Apr', 'May', 'Jun'], // Q2
+            ['Jul', 'Aug', 'Sep'], // Q3
+            ['Oct', 'Nov', 'Dec']  // Q4
+        ];
+
+        // Canvas environment variables
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+
+        // Firebase instances and state
+        let app, db, auth;
+        let userId = null;
+        let fundNames = Array.from({ length: NUMBER_OF_FUNDS }, (_, i) => `กองทุนที่ ${i + 1}`); // Default names
+        let actualAnnualData = { monthly: {}, quarterly: {} }; // Store actual annual calculation result
+
+        // Firestore path helpers
+        const fundDocRef = (uid) => doc(db, `artifacts/${appId}/users/${uid}/fund_names`, 'default');
+        const annualDataDocRef = (uid) => doc(db, `artifacts/${appId}/users/${uid}/annual_actual_data`, 'current_annual_report');
+
+        // --- Utility Functions ---
+
+        /**
+         * แปลงตัวเลขเป็นรูปแบบสกุลเงินไทย
+         * @param {number} amount - จำนวนเงิน
+         * @returns {string} - สตริงรูปแบบสกุลเงิน (เช่น 35,000.00)
+         */
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('th-TH', { 
+                minimumFractionDigits: 2, 
+                maximumFractionDigits: 2 
+            }).format(amount);
+        }
+        
+        // Function to handle exponential backoff for Firebase setDoc
+        async function setDocWithRetry(docRef, data) {
+            const MAX_RETRIES = 5;
+            for (let i = 0; i < MAX_RETRIES; i++) {
+                try {
+                    await setDoc(docRef, data, { merge: true });
+                    return;
+                } catch (error) {
+                    if (i === MAX_RETRIES - 1) {
+                        console.error("Firebase setDoc failed after multiple retries:", error);
+                        throw error;
+                    }
+                    const delay = Math.pow(2, i) * 1000;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+            }
+        }
+        
+        // Function to handle exponential backoff for Firebase getDoc
+        async function getDocWithRetry(docRef) {
+            const MAX_RETRIES = 5;
+            for (let i = 0; i < MAX_RETRIES; i++) {
+                try {
+                    return await getDoc(docRef);
+                } catch (error) {
+                    if (i === MAX_RETRIES - 1) {
+                        console.error("Firebase getDoc failed after multiple retries:", error);
+                        throw error;
+                    }
+                    const delay = Math.pow(2, i) * 1000;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+            }
+        }
+
+        /**
+         * แปลงระยะเวลาเป็น ปี และ เดือน
+         */
+        function formatPaybackPeriod(totalYears) {
+            if (isNaN(totalYears) || totalYears <= 0 || !isFinite(totalYears)) {
+                return { years: 0, months: 0, status: 'ป้อนรายได้เพื่อคำนวณ' };
+            }
+            
+            const years = Math.floor(totalYears);
+            const months = Math.ceil((totalYears - years) * 12);
+            
+            let status = '';
+            if (totalYears > TARGET_PAYBACK_YEARS) {
+                status = 'สูงกว่าเป้าหมาย 2 ปี';
+            } else if (totalYears <= TARGET_PAYBACK_YEARS) {
+                status = 'เป็นไปตามเป้าหมาย 2 ปี';
+            }
+
+            return { years, months, status };
+        }
+
+        /**
+         * คำนวณ ROI และอัปเดต UI (ใช้ประมาณการรายวัน - ส่วนที่ 2)
+         */
+        window.calculateROI = function() {
+            const dailyRevenueInput = document.getElementById('dailyRevenue').value;
+            const dailyRevenue = parseFloat(dailyRevenueInput);
+
+            if (isNaN(dailyRevenue) || dailyRevenue < 0) {
+                document.getElementById('annualRevenueResult').textContent = formatCurrency(0);
+                document.getElementById('annualNetProfitResult').textContent = formatCurrency(0);
+                document.getElementById('paybackPeriodResult').textContent = `N/A`;
+                document.getElementById('paybackStatus').textContent = 'รายได้ต่อวันต้องเป็นตัวเลขที่ถูกต้อง';
+                calculateQuarterlyRevenue();
+                return;
+            }
+
+            const annualRevenue = dailyRevenue * DAYS_PER_YEAR;
+            const annualNetProfit = annualRevenue - ANNUAL_EXPENSE;
+
+            let paybackPeriodYears;
+            if (annualNetProfit > 0) {
+                paybackPeriodYears = INITIAL_INVESTMENT / annualNetProfit;
+            } else {
+                paybackPeriodYears = Infinity;
+            }
+
+            document.getElementById('annualRevenueResult').textContent = formatCurrency(annualRevenue);
+            document.getElementById('annualNetProfitResult').textContent = formatCurrency(annualNetProfit);
+
+            const paybackDisplay = formatPaybackPeriod(paybackPeriodYears);
+
+            if (paybackPeriodYears === Infinity) {
+                 document.getElementById('paybackPeriodResult').textContent = `ไม่คืนทุน`;
+                 document.getElementById('paybackStatus').textContent = 'เนื่องจากกำไรสุทธิเป็นศูนย์หรือติดลบ';
+            } else {
+                document.getElementById('paybackPeriodResult').textContent = `${paybackDisplay.years} ปี ${paybackDisplay.months} เดือน`;
+                document.getElementById('paybackStatus').textContent = paybackDisplay.status;
+            }
+            
+            calculateQuarterlyRevenue();
+        }
+        
+        /**
+         * คำนวณและแสดงผลการแบ่งรายได้รายไตรมาส (ประมาณการ - ส่วนที่ 5)
+         */
+        function calculateQuarterlyRevenue() {
+            const dailyRevenueInput = document.getElementById('dailyRevenue').value;
+            const dailyRevenue = parseFloat(dailyRevenueInput);
+            const container = document.getElementById('quarterlyBreakdown');
+            const totalDisplay = document.getElementById('quarterlyTotal');
+            
+            if (isNaN(dailyRevenue) || dailyRevenue < 0) {
+                container.innerHTML = '<p class="text-center text-red-500">กรุณาป้อนรายได้ต่อวันเพื่อคำนวณไตรมาส</p>';
+                totalDisplay.textContent = '';
+                return;
+            }
+
+            let totalNetRevenueYear = 0;
+            let outputHtml = '';
+
+            for (let q = 1; q <= 4; q++) {
+                const quarterlyRevenue = dailyRevenue * DAYS_PER_QUARTER;
+                const netQuarterlyIncome = quarterlyRevenue - QUARTERLY_EXPENSE; 
+                totalNetRevenueYear += netQuarterlyIncome;
+                
+                const netIncomePerFund = netQuarterlyIncome / NUMBER_OF_FUNDS;
+
+                outputHtml += `
+                    <div class="p-3 bg-white rounded-lg shadow-sm border border-gray-100">
+                        <h4 class="font-bold text-lg text-indigo-700">ไตรมาสที่ ${q} (ประมาณ 3 เดือน)</h4>
+                        <div class="flex justify-between text-sm mt-1">
+                            <span class="text-gray-600">รายรับรวม (ประมาณ ${formatCurrency(DAYS_PER_QUARTER)} วัน):</span>
+                            <span class="font-medium text-green-700">${formatCurrency(quarterlyRevenue)} บาท</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">หักค่าใช้จ่าย (คงที่รายไตรมาส):</span>
+                            <span class="font-medium text-red-700">(${formatCurrency(QUARTERLY_EXPENSE)} บาท)</span>
+                        </div>
+                        <div class="flex justify-between text-base font-bold mt-2 pt-1 border-t border-gray-200 text-blue-800">
+                            <span>กำไรสุทธิไตรมาส:</span>
+                            <span>${formatCurrency(netQuarterlyIncome)} บาท</span>
+                        </div>
+                        <div class="flex justify-between text-sm font-semibold pt-1 text-gray-700">
+                            <span>แบ่งเข้า 10 กองทุน (ต่อกองทุน):</span>
+                            <span class="${netIncomePerFund >= 0 ? 'text-green-600' : 'text-red-600'}">${formatCurrency(netIncomePerFund)} บาท</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = outputHtml;
+            totalDisplay.textContent = `รวมกำไรสุทธิรายปี (จากการแบ่งรายไตรมาส): ${formatCurrency(totalNetRevenueYear)} บาท`;
+        }
+        
+        /**
+         * คำนวณและแสดงผลรายรับจริงสำหรับทั้งปี (ส่วนที่ 6) พร้อมบันทึกลง Firebase
+         * @param {boolean} shouldSave - ระบุว่าควรบันทึกข้อมูลลง Firestore ด้วยหรือไม่ (true เมื่อมีการป้อนค่าใหม่)
+         */
+        window.calculateActualAnnualRevenue = function(shouldSave = false) {
+            const resultDiv = document.getElementById('actualQ1Result');
+            let monthlyRevenues = {};
+            let hasInvalidInput = false;
+            
+            // 1. Read all 12 monthly inputs
+            MONTHS.forEach(month => {
+                const inputElement = document.getElementById(`actual${month}Revenue`);
+                const revenue = parseFloat(inputElement.value) || 0;
+                
+                if (isNaN(revenue) || revenue < 0) {
+                    hasInvalidInput = true;
+                }
+                monthlyRevenues[month] = revenue;
+            });
+
+            if (hasInvalidInput) {
+                resultDiv.innerHTML = '<p class="text-center text-red-500">กรุณาป้อนรายรับจริงต่อเดือนเป็นตัวเลขที่ถูกต้อง</p>';
+                return;
+            }
+            
+            let outputHtml = '';
+            let totalAnnualRevenue = 0;
+            let totalAnnualNetIncome = 0;
+            let currentAnnualData = { monthly: monthlyRevenues, quarterly: {} };
+
+            // 2. Calculate for each quarter
+            QUARTER_MONTHS.forEach((quarterMonths, index) => {
+                const qNum = index + 1;
+                const qName = QUARTER_NAMES[index];
+                
+                let actualQRevenue = 0;
+                quarterMonths.forEach(month => {
+                    actualQRevenue += monthlyRevenues[month];
+                });
+                totalAnnualRevenue += actualQRevenue;
+
+                const actualQNetIncome = actualQRevenue - QUARTERLY_EXPENSE;
+                const actualQNetIncomePerFund = actualQNetIncome / NUMBER_OF_FUNDS;
+                totalAnnualNetIncome += actualQNetIncome;
+                
+                const colorClass = actualQNetIncome >= 0 ? 'text-green-700' : 'text-red-700';
+
+                // Store quarterly data
+                currentAnnualData.quarterly[qName] = {
+                    revenue: actualQRevenue,
+                    expense: QUARTERLY_EXPENSE,
+                    net_income: actualQNetIncome,
+                    net_per_fund: actualQNetIncomePerFund
+                };
+
+                outputHtml += `
+                    <div class="p-3 bg-white rounded-lg shadow-sm border border-gray-100">
+                        <h4 class="font-bold text-lg text-indigo-700">ผลลัพธ์ ${qName}</h4>
+                        <div class="flex justify-between text-sm mt-1">
+                            <span class="text-gray-600">รายรับรวม (${quarterMonths.map(m => MONTH_NAMES_THAI[MONTHS.indexOf(m)]).join(', ')}):</span>
+                            <span class="font-medium text-green-700">${formatCurrency(actualQRevenue)} บาท</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">หักค่าใช้จ่ายคงที่ไตรมาส:</span>
+                            <span class="font-medium text-red-700">(${formatCurrency(QUARTERLY_EXPENSE)} บาท)</span>
+                        </div>
+                        <div class="flex justify-between text-lg font-bold pt-2 border-t border-indigo-100">
+                            <span>กำไรสุทธิไตรมาส:</span>
+                            <span class="${colorClass}">${formatCurrency(actualQNetIncome)} บาท</span>
+                        </div>
+                        <div class="flex justify-between text-sm font-semibold pt-1">
+                            <span>แบ่งเข้า 10 กองทุน (ต่อกองทุน):</span>
+                            <span class="${colorClass}">${formatCurrency(actualQNetIncomePerFund)} บาท</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // 3. Store current calculated data globally and display total
+            window.actualAnnualData = currentAnnualData; // Update global data storage
+            
+            resultDiv.innerHTML = outputHtml;
+            resultDiv.innerHTML += `
+                <div class="pt-4 mt-4 border-t border-gray-300">
+                    <div class="flex justify-between text-xl font-extrabold text-gray-800">
+                        <span>รวมรายรับจริงทั้งปี:</span>
+                        <span class="text-green-900">${formatCurrency(totalAnnualRevenue)} บาท</span>
+                    </div>
+                    <div class="flex justify-between text-xl font-extrabold text-gray-800">
+                        <span>รวมกำไรสุทธิทั้งปี:</span>
+                        <span class="${totalAnnualNetIncome >= 0 ? 'text-blue-900' : 'text-red-900'}">${formatCurrency(totalAnnualNetIncome)} บาท</span>
+                    </div>
+                </div>
+            `;
+            
+            if (shouldSave && db && userId) {
+                saveAnnualData(currentAnnualData);
+            }
+        }
+        
+        /**
+         * บันทึกข้อมูล Actual Annual Data ลง Firestore
+         * @param {Object} data - ข้อมูลรายรับจริงรายปีที่จะบันทึก
+         */
+        async function saveAnnualData(data) {
+            if (!db || !userId) return;
+            try {
+                await setDocWithRetry(annualDataDocRef(userId), data);
+                console.log("Actual annual data saved to Firestore.");
+            } catch (e) {
+                console.error("Error saving annual data: ", e);
+            }
+        }
+
+        /**
+         * โหลดข้อมูล Actual Annual Data จาก Firestore และเติมลงในฟอร์ม
+         */
+        async function loadActualAnnualData() {
+            if (!db || !userId) return;
+
+            try {
+                const docSnap = await getDocWithRetry(annualDataDocRef(userId));
+
+                if (docSnap.exists() && docSnap.data().monthly) {
+                    const data = docSnap.data();
+                    console.log("Actual annual data loaded from Firestore.");
+                    
+                    // Populate inputs with loaded data
+                    MONTHS.forEach(month => {
+                        const inputElement = document.getElementById(`actual${month}Revenue`);
+                        if (inputElement) {
+                            // Ensure data.monthly[month] exists before assigning
+                            inputElement.value = data.monthly[month] !== undefined ? data.monthly[month] : 0;
+                        }
+                    });
+                    
+                    // Recalculate and display the loaded data
+                    calculateActualAnnualRevenue(false); 
+                } else {
+                    console.log("No annual data found. Using initial values.");
+                    calculateActualAnnualRevenue(false); // Fallback calculation
+                }
+            } catch (e) {
+                console.error("Error loading annual data: ", e);
+                calculateActualAnnualRevenue(false); // Fallback calculation
+            }
+        }
+
+        /**
+         * ส่งออกข้อมูลการคำนวณทั้งหมดเป็นไฟล์ CSV
+         */
+        window.exportDataToCSV = async function() {
+            if (!db || !userId) {
+                console.error("Database or User ID is not ready.");
+                return;
+            }
+            
+            const currentAnnualData = window.actualAnnualData;
+
+            if (!currentAnnualData || !currentAnnualData.quarterly || !currentAnnualData.monthly) {
+                console.error("Annual data not yet calculated/loaded.");
+                alert("กรุณากรอกข้อมูลรายรับจริงรายเดือนก่อนทำการส่งออก");
+                return;
+            }
+
+            // 1. Fetch Fund Names 
+            let currentFundNames = fundNames;
+            if (currentFundNames.length !== NUMBER_OF_FUNDS) {
+                 const fundSnap = await getDocWithRetry(fundDocRef(userId));
+                 if (fundSnap.exists()) {
+                     currentFundNames = fundSnap.data().names || currentFundNames;
+                 }
+            }
+            
+            // 2. Prepare CSV Content
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // \uFEFF for BOM (Thai/Excel compatibility)
+
+            csvContent += "ส่วน,รายละเอียด,ยอดรวม (บาท)\n";
+            csvContent += `ข้อมูลทั่วไป,ยอดลงทุนเริ่มต้น,${INITIAL_INVESTMENT}\n`;
+            csvContent += `ข้อมูลทั่วไป,เป้าหมายคืนทุน (ปี),${TARGET_PAYBACK_YEARS}\n`;
+            csvContent += `ข้อมูลทั่วไป,ค่าใช้จ่ายคงที่รายปี,${ANNUAL_EXPENSE}\n`;
+            csvContent += `ข้อมูลทั่วไป,ค่าใช้จ่ายคงที่รายไตรมาส,${QUARTERLY_EXPENSE}\n`;
+            csvContent += `\n`;
+
+            // Monthly breakdown
+            csvContent += "รายรับจริงรายเดือน,เดือน,รายรับ (บาท)\n";
+            MONTHS.forEach((month, index) => {
+                csvContent += `รายรับจริงรายเดือน,${MONTH_NAMES_THAI[index]},${currentAnnualData.monthly[month] || 0}\n`;
+            });
+            csvContent += `\n`;
+
+
+            // Quarterly breakdown
+            csvContent += "ผลลัพธ์รายไตรมาส,ไตรมาส,รายรับรวม,หักค่าใช้จ่าย,กำไรสุทธิ,แบ่งเข้า 10 กองทุน (ต่อกองทุน)\n";
+            QUARTER_NAMES.forEach(qName => {
+                const qData = currentAnnualData.quarterly[qName];
+                if (qData) {
+                    csvContent += `ผลลัพธ์รายไตรมาส,${qName},${qData.revenue},${qData.expense},${qData.net_income},${qData.net_per_fund}\n`;
+                }
+            });
+            csvContent += `\n`;
+            
+            // Fund Allocation (Using Q1 Net Income as a reference, as requested previously)
+            csvContent += "การแบ่งกองทุน,ชื่อกองทุน,ยอดเงินลงทุนเริ่มต้น,กำไรสุทธิไตรมาส 1 (อ้างอิง Q1 จริง)\n";
+            const q1NetIncomePerFund = currentAnnualData.quarterly.Q1 ? currentAnnualData.quarterly.Q1.net_per_fund : 0;
+            currentFundNames.forEach((name, index) => {
+                csvContent += `กองทุนที่ ${index + 1},${name},${FUND_AMOUNT},${q1NetIncomePerFund}\n`;
+            });
+
+
+            // 4. Trigger Download
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `ROI_Water_Vending_Annual_Report_${new Date().toISOString().slice(0, 10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // --- Fund Allocation Logic (Existing) ---
+        
+        function renderFundBoxes() {
+            const container = document.getElementById('fundAllocationContainer');
+            container.innerHTML = ''; 
+
+            const formattedFund = formatCurrency(FUND_AMOUNT);
+            
+            fundNames.forEach((name, index) => {
+                const fundBox = document.createElement('div');
+                fundBox.className = 'p-2 text-center bg-gray-100 rounded-md hover:bg-indigo-100 transition duration-300 cursor-default';
+                fundBox.title = `${name}: ${formattedFund} บาท`;
+                fundBox.innerHTML = `
+                    <p class="text-xs font-semibold text-gray-700">${index + 1}.</p>
+                    <p class="text-sm font-bold text-indigo-500">${name}</p>
+                    <p class="text-xs text-gray-500">(${formattedFund} บาท)</p>
+                `;
+                container.appendChild(fundBox);
+            });
+        }
+
+        window.toggleEditMode = function(isEditing) {
+            const displayContainer = document.getElementById('fundAllocationContainer');
+            const editContainer = document.getElementById('fundEditContainer');
+            const editButton = document.getElementById('editFundsButton');
+            const inputContainer = document.getElementById('fundEditInputs');
+
+            if (isEditing) {
+                displayContainer.classList.add('hidden');
+                editButton.classList.add('hidden');
+                editContainer.classList.remove('hidden');
+
+                inputContainer.innerHTML = '';
+                fundNames.forEach((name, index) => {
+                    const label = document.createElement('label');
+                    label.className = 'block';
+                    label.innerHTML = `
+                        <span class="text-xs font-medium text-gray-500">กองทุนที่ ${index + 1}</span>
+                        <input type="text" id="fundInput${index}" value="${name}" 
+                               class="input-style w-full mt-1 text-sm text-gray-700 px-3 py-2" 
+                               placeholder="ชื่อกองทุน" maxlength="20">
+                    `;
+                    inputContainer.appendChild(label);
+                });
+
+            } else {
+                editContainer.classList.add('hidden');
+                editButton.classList.remove('hidden');
+                displayContainer.classList.remove('hidden');
+            }
+        }
+
+        window.saveFundNames = async function() {
+            if (!db || !userId) {
+                console.error("Database or User ID is not ready.");
+                return;
+            }
+
+            const newFundNames = [];
+            for (let i = 0; i < NUMBER_OF_FUNDS; i++) {
+                const input = document.getElementById(`fundInput${i}`);
+                
+                if (!input) {
+                    console.error("Fund input fields not found. Not saving.");
+                    return; 
+                }
+                
+                newFundNames.push(input.value.trim() || `กองทุนที่ ${i + 1}`);
+            }
+
+            fundNames = newFundNames; 
+            renderFundBoxes(); 
+            toggleEditMode(false); 
+            
+            try {
+                await setDocWithRetry(fundDocRef(userId), { names: fundNames });
+                console.log("Fund names saved successfully!");
+            } catch (e) {
+                console.error("Error saving document: ", e);
+            }
+        }
+
+        async function loadFundNames() {
+            if (!db || !userId) return;
+            
+            onSnapshot(fundDocRef(userId), (docSnapshot) => {
+                const defaultNames = Array.from({ length: NUMBER_OF_FUNDS }, (_, i) => `กองทุนที่ ${i + 1}`);
+                
+                if (docSnapshot.exists()) {
+                    const data = docSnapshot.data();
+                    if (data && Array.isArray(data.names) && data.names.length === NUMBER_OF_FUNDS) {
+                        fundNames = data.names;
+                        console.log("Fund names loaded from Firestore.");
+                    } else {
+                        console.warn("Firestore data structure invalid. Using default names.");
+                        fundNames = defaultNames;
+                    }
+                } else {
+                    console.log("No fund name document found. Using default names and saving them.");
+                    fundNames = defaultNames;
+                    
+                    if (db && userId) {
+                        setDocWithRetry(fundDocRef(userId), { names: defaultNames })
+                            .then(() => console.log("Default fund names saved to Firestore."))
+                            .catch(e => console.error("Error saving default fund names:", e));
+                    }
+                }
+                renderFundBoxes();
+            }, (error) => {
+                console.error("Error getting fund names: ", error);
+                fundNames = Array.from({ length: NUMBER_OF_FUNDS }, (_, i) => `กองทุนที่ ${i + 1}`);
+                renderFundBoxes();
+            });
+        }
+        
+        // --- Initialization ---
+
+        async function initFirebase() {
+            try {
+                if (Object.keys(firebaseConfig).length === 0) {
+                    console.error("Firebase config is empty. Cannot initialize Firestore.");
+                    return;
+                }
+                
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                setLogLevel('Debug');
+                
+                if (typeof __initial_auth_token !== 'undefined') {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        document.getElementById('userIdDisplay').textContent = `User ID: ${userId}`;
+                        loadFundNames(); 
+                        loadActualAnnualData(); // Load actual annual data
+                    } else {
+                        userId = crypto.randomUUID(); 
+                        document.getElementById('userIdDisplay').textContent = `User ID (Anon/Fallback): ${userId}`;
+                        renderFundBoxes();
+                    }
+                });
+
+            } catch (e) {
+                console.error("Firebase initialization failed: ", e);
+            }
+        }
+
+        window.onload = function() {
+            document.getElementById('totalInvestmentDisplay').textContent = formatCurrency(INITIAL_INVESTMENT) + ' บาท';
+            document.getElementById('filterExpense').textContent = formatCurrency(FILTER_EXPENSE) + ' บาท';
+            document.getElementById('repairExpense').textContent = formatCurrency(REPAIR_EXPENSE) + ' บาท';
+            document.getElementById('waterElectricityExpense').textContent = formatCurrency(WATER_ELECTRICITY_EXPENSE) + ' บาท';
+            
+            calculateROI(); 
+            initFirebase(); 
+        }
+    </script>
+</body>
+</html>
