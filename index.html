@@ -37,9 +37,21 @@
 <body class="min-h-screen flex items-center justify-center p-4">
 
     <div class="w-full max-w-4xl bg-white card rounded-xl p-8 space-y-8">
-        <!-- Header -->
+        
+        <!-- Login/Status Header -->
+        <header class="text-right pb-4 border-b border-indigo-100">
+            <div id="authStatus" class="flex justify-end items-center space-x-3 text-sm">
+                <span id="userEmailDisplay" class="font-medium text-gray-700">Guest Mode</span>
+                <button id="authButton" onclick="toggleAuthModal(true)" 
+                        class="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition duration-150">
+                    เข้าสู่ระบบ / ลงทะเบียน
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Header -->
         <header class="text-center space-y-2">
-            <h1 class="text-4xl font-extrabold text-gray-900 border-b-2 pb-2 border-indigo-100">
+            <h1 class="text-4xl font-extrabold text-gray-900">
                 เครื่องคำนวณ ROI การลงทุนตู้กดน้ำ
             </h1>
             <p class="text-lg text-gray-500">การวิเคราะห์ความคุ้มทุนสำหรับตู้กดน้ำหยอดเหรียญ</p>
@@ -114,7 +126,7 @@
             </div>
         </section>
         
-        <!-- NEW SECTION 3 (formerly 5): Quarterly Revenue Breakdown (Estimated) -->
+        <!-- SECTION 3: Quarterly Revenue Breakdown (Estimated) -->
         <section class="space-y-4">
             <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">3. การแบ่งรายได้รายไตรมาส (ประมาณการ)</h2>
             <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
@@ -126,15 +138,15 @@
             </div>
         </section>
 
-        <!-- NEW SECTION 4 (formerly 3): Investment Allocation -->
+        <!-- SECTION 4: Investment Allocation -->
         <section class="space-y-4">
             <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">4. การแบ่งสัดส่วนลงทุน (3 กองทุน)</h2>
             
             <!-- Edit Button and Description -->
             <div class="flex justify-between items-center mb-2">
                 <p class="text-gray-600 text-sm">การแบ่งเงินลงทุนเริ่มต้น 35,000 บาท ออกเป็น 3 ส่วน (ส่วนละประมาณ 11,666.67 บาท)</p>
-                <button id="editFundsButton" onclick="toggleEditMode(true)" 
-                        class="px-4 py-2 bg-indigo-500 text-white text-sm font-medium rounded-lg hover:bg-indigo-600 transition duration-150 shadow-md">
+                <button id="editFundsButton" onclick="toggleEditMode(true)" disabled
+                        class="px-4 py-2 bg-indigo-500 text-white text-sm font-medium rounded-lg hover:bg-indigo-600 transition duration-150 shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed">
                     แก้ไขชื่อกองทุน
                 </button>
             </div>
@@ -162,12 +174,12 @@
             </div>
         </section>
         
-        <!-- NEW SECTION 5 (formerly 4): Summary and Assumptions (Now Editable) -->
+        <!-- SECTION 5: Summary and Assumptions (Now Editable) -->
         <section class="space-y-4">
             <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">5. บทสรุปและสมมติฐานการคำนวณ</h2>
             <div class="flex justify-end mb-2">
-                <button onclick="toggleEditExpenses(true)" id="editExpensesButton" 
-                        class="px-4 py-2 bg-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-300 transition duration-150 shadow-sm">
+                <button onclick="toggleEditExpenses(true)" id="editExpensesButton" disabled
+                        class="px-4 py-2 bg-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-300 transition duration-150 shadow-sm disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed">
                     แก้ไขค่าใช้จ่าย
                 </button>
             </div>
@@ -230,35 +242,36 @@
                 <!-- ADJUSTED GRID LAYOUT FOR BETTER INPUT VISIBILITY -->
                 <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-4" id="monthlyInputGrid">
                     <!-- Input 1: Jan (ใช้ค่าเริ่มต้นที่เหมาะสม) -->
-                    <div><label for="actualJanRevenue" class="block text-xs font-medium text-gray-500">ม.ค.</label><input type="number" id="actualJanRevenue" value="3720" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ม.ค." oninput="calculateActualAnnualRevenue(true)"></div>
+                    <div><label for="actualJanRevenue" class="block text-xs font-medium text-gray-500">ม.ค.</label><input type="number" id="actualJanRevenue" value="3720" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ม.ค." oninput="calculateActualAnnualRevenue(true)" disabled></div>
                     <!-- Input 2: Feb -->
-                    <div><label for="actualFebRevenue" class="block text-xs font-medium text-gray-500">ก.พ.</label><input type="number" id="actualFebRevenue" value="3360" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ก.พ." oninput="calculateActualAnnualRevenue(true)"></div>
+                    <div><label for="actualFebRevenue" class="block text-xs font-medium text-gray-500">ก.พ.</label><input type="number" id="actualFebRevenue" value="3360" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ก.พ." oninput="calculateActualAnnualRevenue(true)" disabled></div>
                     <!-- Input 3: Mar -->
-                    <div><label for="actualMarRevenue" class="block text-xs font-medium text-gray-500">มี.ค.</label><input type="number" id="actualMarRevenue" value="3720" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="มี.ค." oninput="calculateActualAnnualRevenue(true)"></div>
+                    <div><label for="actualMarRevenue" class="block text-xs font-medium text-gray-500">มี.ค.</label><input type="number" id="actualMarRevenue" value="3720" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="มี.ค." oninput="calculateActualAnnualRevenue(true)" disabled></div>
                     
                     <!-- Input 4: Apr -->
-                    <div><label for="actualAprRevenue" class="block text-xs font-medium text-gray-500">เม.ย.</label><input type="number" id="actualAprRevenue" value="3000" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="เม.ย." oninput="calculateActualAnnualRevenue(true)"></div>
+                    <div><label for="actualAprRevenue" class="block text-xs font-medium text-gray-500">เม.ย.</label><input type="number" id="actualAprRevenue" value="3000" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="เม.ย." oninput="calculateActualAnnualRevenue(true)" disabled></div>
                     <!-- Input 5: May -->
-                    <div><label for="actualMayRevenue" class="block text-xs font-medium text-gray-500">พ.ค.</label><input type="number" id="actualMayRevenue" value="3500" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="พ.ค." oninput="calculateActualAnnualRevenue(true)"></div>
+                    <div><label for="actualMayRevenue" class="block text-xs font-medium text-gray-500">พ.ค.</label><input type="number" id="actualMayRevenue" value="3500" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="พ.ค." oninput="calculateActualAnnualRevenue(true)" disabled></div>
                     <!-- Input 6: Jun -->
-                    <div><label for="actualJunRevenue" class="block text-xs font-medium text-gray-500">มิ.ย.</label><input type="number" id="actualJunRevenue" value="3000" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="มิ.ย." oninput="calculateActualAnnualRevenue(true)"></div>
+                    <div><label for="actualJunRevenue" class="block text-xs font-medium text-gray-500">มิ.ย.</label><input type="number" id="actualJunRevenue" value="3000" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="มิ.ย." oninput="calculateActualAnnualRevenue(true)" disabled></div>
 
                     <!-- Input 7: Jul -->
-                    <div><label for="actualJulRevenue" class="block text-xs font-medium text-gray-500">ก.ค.</label><input type="number" id="actualJulRevenue" value="3800" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ก.ค." oninput="calculateActualAnnualRevenue(true)"></div>
+                    <div><label for="actualJulRevenue" class="block text-xs font-medium text-gray-500">ก.ค.</label><input type="number" id="actualJulRevenue" value="3800" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ก.ค." oninput="calculateActualAnnualRevenue(true)" disabled></div>
                     <!-- Input 8: Aug -->
-                    <div><label for="actualAugRevenue" class="block text-xs font-medium text-gray-500">ส.ค.</label><input type="number" id="actualAugRevenue" value="3800" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ส.ค." oninput="calculateActualAnnualRevenue(true)"></div>
+                    <div><label for="actualAugRevenue" class="block text-xs font-medium text-gray-500">ส.ค.</label><input type="number" id="actualAugRevenue" value="3800" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ส.ค." oninput="calculateActualAnnualRevenue(true)" disabled></div>
                     <!-- Input 9: Sep -->
-                    <div><label for="actualSepRevenue" class="block text-xs font-medium text-gray-500">ก.ย.</label><input type="number" id="actualSepRevenue" value="3200" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ก.ย." oninput="calculateActualAnnualRevenue(true)"></div>
+                    <div><label for="actualSepRevenue" class="block text-xs font-medium text-gray-500">ก.ย.</label><input type="number" id="actualSepRevenue" value="3200" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ก.ย." oninput="calculateActualAnnualRevenue(true)" disabled></div>
                     
                     <!-- Input 10: Oct -->
-                    <div><label for="actualOctRevenue" class="block text-xs font-medium text-gray-500">ต.ค.</label><input type="number" id="actualOctRevenue" value="3600" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ต.ค." oninput="calculateActualAnnualRevenue(true)"></div>
+                    <div><label for="actualOctRevenue" class="block text-xs font-medium text-gray-500">ต.ค.</label><input type="number" id="actualOctRevenue" value="3600" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ต.ค." oninput="calculateActualAnnualRevenue(true)" disabled></div>
                     <!-- Input 11: Nov -->
-                    <div><label for="actualNovRevenue" class="block text-xs font-medium text-gray-500">พ.ย.</label><input type="number" id="actualNovRevenue" value="3100" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="พ.ย." oninput="calculateActualAnnualRevenue(true)"></div>
+                    <div><label for="actualNovRevenue" class="block text-xs font-medium text-gray-500">พ.ย.</label><input type="number" id="actualNovRevenue" value="3100" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="พ.ย." oninput="calculateActualAnnualRevenue(true)" disabled></div>
                     <!-- Input 12: Dec -->
-                    <div><label for="actualDecRevenue" class="block text-xs font-medium text-gray-500">ธ.ค.</label><input type="number" id="actualDecRevenue" value="4000" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ธ.ค." oninput="calculateActualAnnualRevenue(true)"></div>
+                    <div><label for="actualDecRevenue" class="block text-xs font-medium text-gray-500">ธ.ค.</label><input type="number" id="actualDecRevenue" value="4000" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ธ.ค." oninput="calculateActualAnnualRevenue(true)" disabled></div>
                 </div>
 
                 <p class="text-xs text-gray-400 pt-1">รายรับรวมจะถูกนำมาหักค่าใช้จ่ายคงที่รายไตรมาส (1,375.00 บาท) ข้อมูลจะถูกบันทึกอัตโนมัติ</p>
+                <!-- Export button remains enabled for guests/unauthenticated users -->
                 <button onclick="exportDataToCSV()" 
                         class="mt-3 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition duration-150 shadow-md">
                     ส่งออกข้อมูลเป็น CSV (เปิดใน Excel ได้)
@@ -287,34 +300,68 @@
                 </a>
             </div>
         </section>
-        
+
+        <!-- Login Modal (Hidden by default) -->
+        <div id="authModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 hidden items-center justify-center p-4">
+            <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md space-y-6">
+                <h3 class="text-2xl font-bold text-gray-800 border-b pb-2">เข้าสู่ระบบ / ลงทะเบียน</h3>
+                <div id="authMessage" class="text-sm text-red-500 hidden"></div>
+                
+                <form onsubmit="handleAuthSubmit(event)">
+                    <div class="space-y-4">
+                        <div>
+                            <label for="authEmail" class="block text-sm font-medium text-gray-700">อีเมล</label>
+                            <input type="email" id="authEmail" required class="input-style w-full mt-1 text-base" placeholder="email@example.com">
+                        </div>
+                        <div>
+                            <label for="authPassword" class="block text-sm font-medium text-gray-700">รหัสผ่าน</label>
+                            <input type="password" id="authPassword" required class="input-style w-full mt-1 text-base" placeholder="รหัสผ่าน (ขั้นต่ำ 6 ตัวอักษร)">
+                        </div>
+                        
+                        <div class="flex space-x-3 pt-2">
+                            <button type="submit" name="action" value="login" 
+                                    class="flex-1 px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition">
+                                เข้าสู่ระบบ
+                            </button>
+                            <button type="submit" name="action" value="register" 
+                                    class="flex-1 px-4 py-2 text-indigo-600 border border-indigo-600 rounded-lg hover:bg-indigo-50 transition">
+                                ลงทะเบียน
+                            </button>
+                        </div>
+                        <button type="button" onclick="toggleAuthModal(false)" class="w-full text-sm text-gray-500 mt-2 hover:text-gray-700 transition">
+                            ยกเลิก
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <!-- User ID Display for debugging/collaboration (Mandatory) -->
         <p class="text-xs text-gray-400 mt-4" id="userIdDisplay">User ID: N/A</p>
         <!-- Security Rules Reminder -->
         <div id="securityRuleWarning" class="text-xs text-yellow-700 p-2 bg-yellow-100 border border-yellow-300 rounded-lg mt-2 hidden">
             <p class="font-bold">🚨 การแจ้งเตือนด้านสิทธิ์การเข้าถึง (Permission Issue)</p>
-            <p>การบันทึก/โหลดข้อมูลล้มเหลว โปรดตรวจสอบ <span class="font-bold">1. Firebase Authentication</span> (ต้องเปิด Anonymous Sign-in) และ <span class="font-bold">2. Firestore Security Rules</span> ในโปรเจกต์ Firebase ของคุณ เพื่ออนุญาตให้ผู้ใช้ที่เข้าสู่ระบบสามารถอ่าน/เขียนข้อมูลในพาธส่วนตัวของตนเองได้</p>
+            <p>การบันทึก/โหลดข้อมูลล้มเหลว โปรดตรวจสอบ <span class="font-bold">1. Firebase Authentication</span> (ต้องเปิด Email/Password Sign-in) และ <span class="font-bold">2. Firestore Security Rules</span> ในโปรเจกต์ Firebase ของคุณ เพื่ออนุญาตให้ผู้ใช้ที่เข้าสู่ระบบสามารถอ่าน/เขียนข้อมูลในพาธส่วนตัวของตนเองได้</p>
         </div>
     </div>
 
     <script type="module">
         // --- Firebase Imports ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         
         // --- Default Fixed Expense Setup ---
-        // THESE ARE THE DEFAULTS IF FIRESTORE DATA IS NOT AVAILABLE
         const DEFAULT_FILTER_EXPENSE = 3000;
         const DEFAULT_REPAIR_EXPENSE = 1000;
         const DEFAULT_WATER_ELECTRICITY_EXPENSE = 1500; 
 
-        // --- Global Constants and Arrays for Monthly/Quarterly Calculation ---
+        // --- Global Constants ---
         const INITIAL_INVESTMENT = 35000;
         const DAYS_PER_YEAR = 365;
         const TARGET_PAYBACK_YEARS = 2;
-        const NUMBER_OF_FUNDS = 3; // FIXED: Changed from 10 to 3
-        const FUND_AMOUNT = INITIAL_INVESTMENT / NUMBER_OF_FUNDS; // 35000 / 3
+        const NUMBER_OF_FUNDS = 3; 
+        const FUND_AMOUNT = INITIAL_INVESTMENT / NUMBER_OF_FUNDS; 
         
         // Arrays for Month/Quarter Mapping (used in Section 6)
         const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -334,11 +381,9 @@
         let annualExpense = filterExpense + repairExpense + waterElectricityExpense;
         let quarterlyExpense = annualExpense / 4;
 
-
         // --- Firebase Configuration ---
         const appId = "prowater-60735"; // Using Project ID for Firestore path
 
-        // CONFIGURATION PROVIDED BY USER
         const firebaseConfig = {
             apiKey: "AIzaSyAkIATUjTrvXI2hUoGNEv5ntJAeulyOjVA",
             authDomain: "prowater-60735.firebaseapp.com",
@@ -354,6 +399,7 @@
         let userId = null;
         let fundNames = Array.from({ length: NUMBER_OF_FUNDS }, (_, i) => `กองทุนที่ ${i + 1}`); // Default names
         let actualAnnualData = { monthly: {}, quarterly: {} }; // Store actual annual calculation result
+        let isLoggedIn = false; // New state variable
 
         // Firestore path helpers
         const fundDocRef = (uid) => doc(db, `artifacts/${appId}/users/${uid}/fund_names`, 'default');
@@ -364,8 +410,6 @@
 
         /**
          * แปลงตัวเลขเป็นรูปแบบสกุลเงินไทย
-         * @param {number} amount - จำนวนเงิน
-         * @returns {string} - สตริงรูปแบบสกุลเงิน (เช่น 35,000.00)
          */
         function formatCurrency(amount) {
             return new Intl.NumberFormat('th-TH', { 
@@ -434,6 +478,20 @@
             }
 
             return { years, months, status };
+        }
+
+        /**
+         * อัปเดตสถานะ UI สำหรับการแก้ไขตามสถานะล็อกอิน
+         */
+        function updateEditingUIState(isAuth) {
+            isLoggedIn = isAuth;
+            document.getElementById('editFundsButton').disabled = !isAuth;
+            document.getElementById('editExpensesButton').disabled = !isAuth;
+
+            const monthlyInputs = document.querySelectorAll('#monthlyInputGrid input');
+            monthlyInputs.forEach(input => {
+                input.disabled = !isAuth;
+            });
         }
 
         /**
@@ -662,10 +720,9 @@
         
         /**
          * บันทึกข้อมูล Actual Annual Data ลง Firestore
-         * @param {Object} data - ข้อมูลรายรับจริงรายปีที่จะบันทึก
          */
         async function saveAnnualData(data) {
-            if (!db || !userId) return;
+            if (!db || !userId || !isLoggedIn) return;
             try {
                 await setDocWithRetry(annualDataDocRef(userId), data);
                 console.log("Actual annual data saved to Firestore.");
@@ -678,7 +735,7 @@
          * โหลดข้อมูล Actual Annual Data จาก Firestore และเติมลงในฟอร์ม
          */
         async function loadActualAnnualData() {
-            if (!db || !userId) return;
+            if (!db || !userId || !isLoggedIn) return;
 
             try {
                 const docSnap = await getDocWithRetry(annualDataDocRef(userId));
@@ -707,13 +764,16 @@
             }
         }
 
-        // --- NEW: Fixed Expense Logic (Section 5) ---
+        // --- Fixed Expense Logic (Section 5) ---
 
         /**
          * แสดง/ซ่อน UI สำหรับแก้ไขค่าใช้จ่ายคงที่
-         * @param {boolean} isEditing - true เพื่อเข้าสู่โหมดแก้ไข, false เพื่อออก
          */
         window.toggleEditExpenses = function(isEditing) {
+            if (!isLoggedIn) {
+                alert("กรุณาเข้าสู่ระบบก่อนแก้ไขค่าใช้จ่าย");
+                return;
+            }
             const displayDiv = document.getElementById('expensesDisplay');
             const editDiv = document.getElementById('expensesEdit');
             const editButton = document.getElementById('editExpensesButton');
@@ -738,6 +798,8 @@
          * บันทึกค่าใช้จ่ายคงที่ใหม่ลง Firestore และอัปเดตการคำนวณทั้งหมด
          */
         window.saveFixedExpenses = async function() {
+            if (!isLoggedIn) return;
+
             const newFilter = parseFloat(document.getElementById('inputFilterExpense').value) || 0;
             const newRepair = parseFloat(document.getElementById('inputRepairExpense').value) || 0;
             const newWaterElect = parseFloat(document.getElementById('inputWaterElectricityExpense').value) || 0;
@@ -773,7 +835,11 @@
          * โหลดค่าใช้จ่ายคงที่จาก Firestore
          */
         async function loadFixedExpenses() {
-            if (!db || !userId) return;
+            if (!db || !userId || !isLoggedIn) {
+                // Use defaults if not logged in
+                updateExpensesAndRecalculate(DEFAULT_FILTER_EXPENSE, DEFAULT_REPAIR_EXPENSE, DEFAULT_WATER_ELECTRICITY_EXPENSE);
+                return;
+            }
 
             try {
                 const docSnap = await getDocWithRetry(expenseDocRef(userId));
@@ -814,30 +880,29 @@
          * ส่งออกข้อมูลการคำนวณทั้งหมดเป็นไฟล์ CSV
          */
         window.exportDataToCSV = async function() {
-            if (!db || !userId) {
-                console.error("Database or User ID is not ready.");
-                return;
+            // Export is allowed even for guests, but some data persistence checks remain
+            if (!db) {
+                alert("ไม่สามารถเชื่อมต่อ Firebase ได้ การส่งออกข้อมูลจึงอาจขาดข้อมูลที่บันทึกไว้");
             }
             
             const currentAnnualData = window.actualAnnualData;
 
             if (!currentAnnualData || !currentAnnualData.quarterly || !currentAnnualData.monthly) {
-                console.error("Annual data not yet calculated/loaded.");
                 alert("กรุณากรอกข้อมูลรายรับจริงรายเดือนก่อนทำการส่งออก");
                 return;
             }
 
-            // 1. Fetch Fund Names 
+            // 1. Fetch Fund Names (Use local fundNames if not logged in or if fetching fails)
             let currentFundNames = fundNames;
-            if (currentFundNames.length !== NUMBER_OF_FUNDS) {
+            if (currentFundNames.length !== NUMBER_OF_FUNDS && db && userId) {
                  const fundSnap = await getDocWithRetry(fundDocRef(userId));
                  if (fundSnap.exists()) {
-                     currentFundNames = fundSnap.data().names || currentFundNames;
+                     currentFundNames = fundSnap.data().names.slice(0, NUMBER_OF_FUNDS) || currentFundNames;
                  }
             }
             
-            // 2. Prepare CSV Content
-            let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // \uFEFF for BOM (Thai/Excel compatibility)
+            // 2. Prepare CSV Content [CSV preparation logic remains the same]
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; 
 
             csvContent += "ส่วน,รายละเอียด,ยอดรวม (บาท)\n";
             csvContent += `ข้อมูลทั่วไป,ยอดลงทุนเริ่มต้น,${INITIAL_INVESTMENT}\n`;
@@ -890,7 +955,7 @@
             document.body.removeChild(link);
         }
 
-        // --- Fund Allocation Logic (Existing) ---
+        // --- Fund Allocation Logic (Section 4) ---
         
         function renderFundBoxes() {
             const container = document.getElementById('fundAllocationContainer');
@@ -900,7 +965,6 @@
             
             fundNames.forEach((name, index) => {
                 const fundBox = document.createElement('div');
-                // Adjusted grid-cols-4 or grid-cols-6 to grid-cols-3 (since we have 3 funds now)
                 fundBox.className = 'p-2 text-center bg-gray-100 rounded-md hover:bg-indigo-100 transition duration-300 cursor-default col-span-1'; 
                 fundBox.title = `${name}: ${formattedFund} บาท`;
                 fundBox.innerHTML = `
@@ -913,6 +977,10 @@
         }
 
         window.toggleEditMode = function(isEditing) {
+            if (!isLoggedIn) {
+                alert("กรุณาเข้าสู่ระบบก่อนแก้ไขชื่อกองทุน");
+                return;
+            }
             const displayContainer = document.getElementById('fundAllocationContainer');
             const editContainer = document.getElementById('fundEditContainer');
             const editButton = document.getElementById('editFundsButton');
@@ -924,7 +992,6 @@
                 editContainer.classList.remove('hidden');
 
                 inputContainer.innerHTML = '';
-                // Only loop 3 times now
                 for (let i = 0; i < NUMBER_OF_FUNDS; i++) {
                     const name = fundNames[i] || `กองทุนที่ ${i + 1}`;
                     const label = document.createElement('label');
@@ -946,13 +1013,9 @@
         }
 
         window.saveFundNames = async function() {
-            if (!db || !userId) {
-                console.error("Database or User ID is not ready.");
-                return;
-            }
+            if (!db || !userId || !isLoggedIn) return;
 
             const newFundNames = [];
-            // Loop only for NUMBER_OF_FUNDS (3)
             for (let i = 0; i < NUMBER_OF_FUNDS; i++) {
                 const input = document.getElementById(`fundInput${i}`);
                 
@@ -969,7 +1032,6 @@
             toggleEditMode(false); 
             
             try {
-                // Ensure saving only 3 names
                 await setDocWithRetry(fundDocRef(userId), { names: newFundNames.slice(0, NUMBER_OF_FUNDS) }); 
                 console.log("Fund names saved successfully!");
             } catch (e) {
@@ -978,16 +1040,15 @@
         }
 
         async function loadFundNames() {
-            if (!db || !userId) return;
+            if (!db || !userId || !isLoggedIn) return;
             
             onSnapshot(fundDocRef(userId), (docSnapshot) => {
-                // Only create default names based on NUMBER_OF_FUNDS (3)
                 const defaultNames = Array.from({ length: NUMBER_OF_FUNDS }, (_, i) => `กองทุนที่ ${i + 1}`);
                 
                 if (docSnapshot.exists()) {
                     const data = docSnapshot.data();
                     if (data && Array.isArray(data.names) && data.names.length >= NUMBER_OF_FUNDS) {
-                        fundNames = data.names.slice(0, NUMBER_OF_FUNDS); // Take only the first 3
+                        fundNames = data.names.slice(0, NUMBER_OF_FUNDS);
                         console.log("Fund names loaded from Firestore.");
                     } else {
                         console.warn("Firestore data structure invalid. Using default names.");
@@ -1004,12 +1065,10 @@
                     }
                 }
                 renderFundBoxes();
-                // Hide warning if data load was successful (exists or saved default successfully)
                 document.getElementById('securityRuleWarning').classList.add('hidden');
             }, (error) => {
                 console.error("Error getting fund names: ", error);
                 
-                // Check if the error is permission-denied (403)
                 if (error.code === 'permission-denied') {
                     document.getElementById('securityRuleWarning').classList.remove('hidden');
                     console.warn("🚨 Firestore Permission Denied. Check Security Rules for /artifacts/{appId}/users/{userId}/...");
@@ -1020,12 +1079,65 @@
             });
         }
         
-        // --- Initialization ---
+        // --- Auth and Initialization ---
+        
+        window.toggleAuthModal = function(show) {
+            const modal = document.getElementById('authModal');
+            modal.style.display = show ? 'flex' : 'none';
+            document.getElementById('authMessage').classList.add('hidden');
+        }
+
+        window.handleAuthSubmit = async function(event) {
+            event.preventDefault();
+            const action = event.submitter.value;
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            const msgElement = document.getElementById('authMessage');
+            
+            msgElement.classList.add('hidden');
+
+            try {
+                if (action === 'register') {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    alert("ลงทะเบียนสำเร็จ! คุณเข้าสู่ระบบแล้ว");
+                } else if (action === 'login') {
+                    await signInWithEmailAndPassword(auth, email, password);
+                }
+                toggleAuthModal(false);
+
+            } catch (error) {
+                let errorMessage = "เกิดข้อผิดพลาดในการเข้าสู่ระบบ/ลงทะเบียน";
+                if (error.code === 'auth/wrong-password') {
+                    errorMessage = "รหัสผ่านไม่ถูกต้อง";
+                } else if (error.code === 'auth/user-not-found') {
+                    errorMessage = "ไม่พบผู้ใช้นี้";
+                } else if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = "อีเมลนี้ถูกใช้แล้ว";
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = "รูปแบบอีเมลไม่ถูกต้อง";
+                } else {
+                     console.error("Auth error:", error);
+                }
+                msgElement.textContent = errorMessage;
+                msgElement.classList.remove('hidden');
+            }
+        }
+        
+        window.handleLogout = async function() {
+             if (!auth) return;
+             try {
+                await signOut(auth);
+             } catch (error) {
+                console.error("Logout failed:", error);
+             }
+        }
+
 
         async function initFirebase() {
-             // 1. Basic check if required config exists
             if (!firebaseConfig.projectId) {
-                console.error("🚨🚨 CRITICAL: Firebase config is missing Project ID. Cannot initialize Firebase. Data will not persist.");
+                console.error("🚨🚨 CRITICAL: Firebase config is missing Project ID. Data will not persist.");
             }
 
             try {
@@ -1034,48 +1146,61 @@
                 auth = getAuth(app);
                 setLogLevel('Debug');
                 
-                // Use standard anonymous sign-in
-                await signInAnonymously(auth);
-
+                // Do NOT call signInAnonymously automatically here, let the user decide.
+                
                 onAuthStateChanged(auth, (user) => {
+                    const userEmailDisplay = document.getElementById('userEmailDisplay');
+                    const authButton = document.getElementById('authButton');
+                    
                     if (user) {
                         userId = user.uid;
-                        document.getElementById('userIdDisplay').textContent = `User ID: ${userId}`;
+                        isLoggedIn = true;
+                        
+                        // Update UI for logged in state
+                        userEmailDisplay.textContent = user.email || "User ID: " + userId;
+                        authButton.textContent = "ออกจากระบบ";
+                        authButton.onclick = window.handleLogout;
+                        
+                        // Load persistent data
                         loadFundNames(); 
                         loadActualAnnualData(); 
-                        loadFixedExpenses(); // Load fixed expenses
+                        loadFixedExpenses(); 
+                        
                     } else {
-                        // Fallback to anonymous local simulation if authentication fails unexpectedly
-                        userId = crypto.randomUUID(); 
-                        document.getElementById('userIdDisplay').textContent = `User ID (Auth Failed Sim): ${userId}`;
+                        // Not logged in (guest mode)
+                        userId = null; 
+                        isLoggedIn = false;
+                        
+                        // Update UI for guest state
+                        userEmailDisplay.textContent = "Guest Mode";
+                        authButton.textContent = "เข้าสู่ระบบ / ลงทะเบียน";
+                        authButton.onclick = () => toggleAuthModal(true);
+                        
+                        // Use default data (since no specific user data can be loaded)
+                        updateExpensesAndRecalculate(DEFAULT_FILTER_EXPENSE, DEFAULT_REPAIR_EXPENSE, DEFAULT_WATER_ELECTRICITY_EXPENSE);
                         renderFundBoxes();
                     }
+                    // Final UI state update based on login status
+                    updateEditingUIState(isLoggedIn);
                 });
 
             } catch (e) {
                 console.error("Firebase initialization failed:", e);
-                // IF FIREBASE INIT/AUTH FAILS, FALLBACK TO LOCAL SIMULATION MODE
-                let message = "Firebase initialization failed: No persistence (local simulation only).";
-                
-                // Explicitly check for configuration/permission related errors
-                if (e.code === 'auth/configuration-not-found' || e.code === 'auth/unauthorized-domain' || e.code === 'auth/admin-restricted-operation') {
-                    message = `🚨 Firebase Auth Error (${e.code}): Authentication failed. Check Firebase Console (Authentication -> Sign-in method -> Anonymous). Data will NOT persist.`;
-                    document.getElementById('securityRuleWarning').classList.remove('hidden');
-                }
-                
-                console.warn(message);
-                
-                userId = crypto.randomUUID(); 
-                document.getElementById('userIdDisplay').textContent = `User ID (Local Sim): ${userId}`;
-                // Manually load defaults if Firebase failed completely
-                updateExpensesAndRecalculate(DEFAULT_FILTER_EXPENSE, DEFAULT_REPAIR_EXPENSE, DEFAULT_WATER_ELECTRICITY_EXPENSE);
+                // If the entire Firebase initialization fails, go to local mode (no persistence)
+                updateEditingUIState(false);
+                document.getElementById('securityRuleWarning').classList.remove('hidden');
+                document.getElementById('securityRuleWarning').innerHTML = `
+                    <p class="font-bold">🚨 Firebase Connection Failed</p>
+                    <p>การเชื่อมต่อ Firebase ล้มเหลว (Init Error). การตั้งค่า/บันทึกข้อมูลจะไม่มีผล</p>
+                    <p class="text-xs text-red-500">Error Code: ${e.code || 'UNKNOWN'}</p>
+                `;
             }
         }
 
         window.onload = function() {
             document.getElementById('totalInvestmentDisplay').textContent = formatCurrency(INITIAL_INVESTMENT) + ' บาท';
             
-            // Set initial defaults before Firebase loads
+            // Set initial defaults and display them
             updateExpensesAndRecalculate(DEFAULT_FILTER_EXPENSE, DEFAULT_REPAIR_EXPENSE, DEFAULT_WATER_ELECTRICITY_EXPENSE);
 
             calculateROI(); 
