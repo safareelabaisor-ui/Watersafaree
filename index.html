@@ -114,9 +114,21 @@
             </div>
         </section>
         
-        <!-- Investment Allocation Section -->
+        <!-- NEW SECTION 3 (formerly 5): Quarterly Revenue Breakdown (Estimated) -->
         <section class="space-y-4">
-            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">3. การแบ่งสัดส่วนลงทุน (10 กองทุน)</h2>
+            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">3. การแบ่งรายได้รายไตรมาส (ประมาณการ)</h2>
+            <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <p class="text-sm text-gray-600 mb-4">การคำนวณนี้จะหักค่าใช้จ่ายคงที่รายปีออกเป็นรายไตรมาส (<span id="quarterlyExpenseDisplay">1,375.00</span> บาทต่อไตรมาส) จากรายรับรวมของไตรมาสที่คาดว่าจะได้รับ และแบ่งกำไรสุทธิที่เหลือเข้าสู่ 10 กองทุนที่กำหนดไว้</p>
+                <div id="quarterlyBreakdown" class="space-y-4">
+                    <!-- Quarterly results will be rendered here by JS -->
+                </div>
+                <p id="quarterlyTotal" class="text-lg font-bold text-gray-800 mt-4 pt-3 border-t border-gray-300"></p>
+            </div>
+        </section>
+
+        <!-- NEW SECTION 4 (formerly 3): Investment Allocation -->
+        <section class="space-y-4">
+            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">4. การแบ่งสัดส่วนลงทุน (10 กองทุน)</h2>
             
             <!-- Edit Button and Description -->
             <div class="flex justify-between items-center mb-2">
@@ -149,9 +161,9 @@
             </div>
         </section>
         
-        <!-- SECTION 4: Summary and Assumptions (Now Editable) -->
+        <!-- NEW SECTION 5 (formerly 4): Summary and Assumptions (Now Editable) -->
         <section class="space-y-4">
-            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">4. บทสรุปและสมมติฐานการคำนวณ</h2>
+            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">5. บทสรุปและสมมติฐานการคำนวณ</h2>
             <div class="flex justify-end mb-2">
                 <button onclick="toggleEditExpenses(true)" id="editExpensesButton" 
                         class="px-4 py-2 bg-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-300 transition duration-150 shadow-sm">
@@ -206,19 +218,7 @@
 
         </section>
 
-        <!-- SECTION 5: Quarterly Revenue Breakdown (Estimated) -->
-        <section class="space-y-4">
-            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">5. การแบ่งรายได้รายไตรมาส (ประมาณการ)</h2>
-            <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <p class="text-sm text-gray-600 mb-4">การคำนวณนี้จะหักค่าใช้จ่ายคงที่รายปีออกเป็นรายไตรมาส (<span id="quarterlyExpenseDisplay">1,375.00</span> บาทต่อไตรมาส) จากรายรับรวมของไตรมาสที่คาดว่าจะได้รับ และแบ่งกำไรสุทธิที่เหลือเข้าสู่ 10 กองทุนที่กำหนดไว้</p>
-                <div id="quarterlyBreakdown" class="space-y-4">
-                    <!-- Quarterly results will be rendered here by JS -->
-                </div>
-                <p id="quarterlyTotal" class="text-lg font-bold text-gray-800 mt-4 pt-3 border-t border-gray-300"></p>
-            </div>
-        </section>
-        
-        <!-- NEW SECTION 6: Actual Annual Revenue Recording (Monthly Input) -->
+        <!-- NEW SECTION 6 (formerly 6): Actual Annual Revenue Recording (Monthly Input) -->
         <section class="space-y-4">
             <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">6. บันทึกและคำนวณรายรับจริงรายไตรมาส (รายเดือน)</h2>
             <p class="text-sm text-indigo-700 font-medium">กรอกรายรับจริงรายเดือนเพื่อคำนวณกำไรสุทธิ 4 ไตรมาส</p>
@@ -490,7 +490,7 @@
         }
         
         /**
-         * คำนวณและแสดงผลการแบ่งรายได้รายไตรมาส (ประมาณการ - ส่วนที่ 5)
+         * คำนวณและแสดงผลการแบ่งรายได้รายไตรมาส (ประมาณการ - ส่วนที่ 3)
          */
         function calculateQuarterlyRevenue() {
             const dailyRevenueInput = document.getElementById('dailyRevenue').value;
@@ -508,7 +508,6 @@
             let outputHtml = '';
 
             for (let q = 1; q <= 4; q++) {
-                // FIXED: Use DAYS_PER_YEAR constant defined globally
                 const quarterlyRevenue = dailyRevenue * (DAYS_PER_YEAR / 4); 
                 const netQuarterlyIncome = quarterlyRevenue - quarterlyExpense; // Use dynamic quarterlyExpense
                 totalNetRevenueYear += netQuarterlyIncome;
@@ -689,7 +688,7 @@
             }
         }
 
-        // --- NEW: Fixed Expense Logic (Section 4) ---
+        // --- NEW: Fixed Expense Logic (Section 5) ---
 
         /**
          * แสดง/ซ่อน UI สำหรับแก้ไขค่าใช้จ่ายคงที่
