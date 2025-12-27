@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เครื่องคำนวณ ROI ตู้กดน้ำหยอดเหรียญ</title>
-    <!-- โหลด Tailwind CSS CDN -->
+    <title>เครื่องคำนวณ ROI ตู้กดน้ำหยอดเหรียญ (6 กองทุน)</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- ใช้ฟอนต์ Inter สำหรับความมินิมอลและอ่านง่าย -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body {
@@ -36,9 +34,8 @@
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
 
-    <div class="w-full max-w-4xl bg-white card rounded-xl p-8 space-y-8">
+    <div class="w-full max-w-5xl bg-white card rounded-xl p-8 space-y-8">
         
-        <!-- Login/Status Header -->
         <header class="text-right pb-4 border-b border-indigo-100">
             <div id="authStatus" class="flex justify-end items-center space-x-3 text-sm">
                 <span id="userEmailDisplay" class="font-medium text-gray-700">Guest Mode</span>
@@ -49,22 +46,19 @@
             </div>
         </header>
 
-        <!-- Main Header -->
         <header class="text-center space-y-2">
             <h1 class="text-4xl font-extrabold text-gray-900">
                 ♨⛲ ลงทุนตู้กดน้ำ-@SAFAREE ⛲♨
             </h1>
-            <p class="text-lg text-gray-500">การวิเคราะห์ความคุ้มทุนสำหรับตู้กดน้ำหยอดเหรียญ</p>
+            <p class="text-lg text-gray-500">การวิเคราะห์ความคุ้มทุนสำหรับตู้กดน้ำหยอดเหรียญ (6 กองทุน)</p>
         </header>
 
-        <!-- Fixed Investment & Expense Card -->
         <div class="grid md:grid-cols-2 gap-6 p-6 bg-indigo-50 rounded-lg">
             <div>
                 <h2 class="text-xl font-semibold text-indigo-700 mb-2">ยอดลงทุนเริ่มต้น</h2>
                 <div class="text-3xl font-bold text-indigo-900" id="totalInvestmentDisplay">35,000.00 บาท</div>
                 <p class="text-sm text-gray-500 mt-1">ยอดรวมในการติดตั้งและจัดซื้อตู้กดน้ำ</p>
             </div>
-            <!-- UPDATED EXPENSE SECTION -->
             <div>
                 <h2 class="text-xl font-semibold text-red-700 mb-2">ค่าใช้จ่ายคงที่รายปี (รวม <span id="annualExpenseTotal">5,500.00</span> บาท)</h2>
                 <div class="space-y-1">
@@ -85,7 +79,6 @@
             </div>
         </div>
 
-        <!-- Input Section -->
         <section class="space-y-4">
             <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">1. กรอกข้อมูลรายได้ (ประมาณการรายวัน)</h2>
             <div>
@@ -99,11 +92,9 @@
             </div>
         </section>
 
-        <!-- Output/Result Section -->
         <section class="space-y-6">
             <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">2. ผลการคำนวณ ROI (ภาพรวม)</h2>
             
-            <!-- Result Grid -->
             <div class="grid md:grid-cols-3 gap-4 text-center">
                 
                 <div class="p-5 bg-green-50 rounded-lg card">
@@ -126,43 +117,35 @@
             </div>
         </section>
         
-        <!-- SECTION 3: Quarterly Revenue Breakdown (Estimated) -->
         <section class="space-y-4">
             <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">3. การแบ่งรายได้รายไตรมาส (ประมาณการ)</h2>
             <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <p class="text-sm text-gray-600 mb-4">การคำนวณนี้จะหักค่าใช้จ่ายคงที่รายปีออกเป็นรายไตรมาส (<span id="quarterlyExpenseDisplay">1,375.00</span> บาทต่อไตรมาส) จากรายรับรวมของไตรมาสที่คาดว่าจะได้รับ และแบ่งกำไรสุทธิที่เหลือเข้าสู่ <span class="font-bold">5 กองทุน</span>ที่กำหนดไว้</p>
+                <p class="text-sm text-gray-600 mb-4">การคำนวณนี้จะหักค่าใช้จ่ายคงที่รายปีออกเป็นรายไตรมาส (<span id="quarterlyExpenseDisplay">1,375.00</span> บาทต่อไตรมาส) จากรายรับรวมของไตรมาสที่คาดว่าจะได้รับ และแบ่งกำไรสุทธิที่เหลือเข้าสู่ <span class="font-bold">6 กองทุน</span>ที่กำหนดไว้</p>
                 <div id="quarterlyBreakdown" class="space-y-4">
-                    <!-- Quarterly results will be rendered here by JS -->
-                </div>
+                    </div>
                 <p id="quarterlyTotal" class="text-lg font-bold text-gray-800 mt-4 pt-3 border-t border-gray-300"></p>
             </div>
         </section>
 
-        <!-- SECTION 4: Investment Allocation -->
         <section class="space-y-4">
-            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">4. การแบ่งสัดส่วนลงทุน (5 กองทุน)</h2>
+            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">4. การแบ่งสัดส่วนลงทุน (6 กองทุน)</h2>
             
-            <!-- Edit Button and Description -->
             <div class="flex justify-between items-center mb-2">
-                <p class="text-gray-600 text-sm">การแบ่งเงินลงทุนเริ่มต้น 35,000 บาท ออกเป็น 5 ส่วน (ส่วนละประมาณ 7,000.00 บาท)</p>
+                <p class="text-gray-600 text-sm">การแบ่งเงินลงทุนเริ่มต้น 35,000 บาท ออกเป็น 6 ส่วน (ส่วนละประมาณ 5,833.33 บาท)</p>
                 <button id="editFundsButton" onclick="toggleEditMode(true)" disabled
                         class="px-4 py-2 bg-indigo-500 text-white text-sm font-medium rounded-lg hover:bg-indigo-600 transition duration-150 shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed">
                     แก้ไขชื่อกองทุน
                 </button>
             </div>
 
-            <!-- Display Mode (Funds Boxes) -->
-            <div id="fundAllocationContainer" class="grid grid-cols-3 sm:grid-cols-5 gap-4">
-                <p class="col-span-5 text-center text-gray-500">กำลังโหลดข้อมูลกองทุน...</p>
+            <div id="fundAllocationContainer" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                <p class="col-span-full text-center text-gray-500">กำลังโหลดข้อมูลกองทุน...</p>
             </div>
 
-            <!-- Edit Mode (Input Fields) -->
             <div id="fundEditContainer" class="hidden space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-800">แก้ไขรายชื่อ 5 กองทุน</h3>
-                <!-- Adjusted grid for 5 inputs -->
-                <div class="grid grid-cols-2 md:grid-cols-5 gap-3" id="fundEditInputs">
-                    <!-- Input fields will be rendered here by JS -->
-                </div>
+                <h3 class="text-lg font-semibold text-gray-800">แก้ไขรายชื่อ 6 กองทุน</h3>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3" id="fundEditInputs">
+                    </div>
                 <div class="flex justify-end space-x-3">
                     <button onclick="toggleEditMode(false)" class="px-4 py-2 text-sm text-gray-700 bg-white border rounded-lg hover:bg-gray-100 transition">
                         ยกเลิก
@@ -174,7 +157,6 @@
             </div>
         </section>
         
-        <!-- SECTION 5: Summary and Assumptions (Now Editable) -->
         <section class="space-y-4">
             <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">5. บทสรุปและสมมติฐานการคำนวณ</h2>
             <div class="flex justify-end mb-2">
@@ -184,7 +166,6 @@
                 </button>
             </div>
 
-            <!-- Display Mode -->
             <div id="expensesDisplay" class="space-y-2 text-gray-700 p-4 bg-gray-50 rounded-lg">
                 <p class="font-bold text-gray-800">สมมติฐานหลัก:</p>
                 <ul class="list-disc list-inside space-y-1 ml-4 text-sm">
@@ -202,7 +183,6 @@
                 <p class="text-xs text-gray-500 mt-4">*การคำนวณนี้เป็นประมาณการเบื้องต้น ไม่รวมภาษี ค่าเช่าพื้นที่ และต้นทุนน้ำ</p>
             </div>
 
-            <!-- Edit Mode -->
             <div id="expensesEdit" class="hidden space-y-3 p-4 bg-gray-100 rounded-lg border border-gray-300">
                 <h3 class="text-lg font-semibold text-gray-800">แก้ไขค่าใช้จ่ายคงที่รายปี</h3>
                 <div class="space-y-2">
@@ -231,7 +211,6 @@
 
         </section>
 
-        <!-- NEW SECTION 6 (formerly 6): Actual Annual Revenue Recording (Monthly Input) -->
         <section class="space-y-4">
             <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">6. บันทึกและคำนวณรายรับจริงรายไตรมาส (รายเดือน)</h2>
             <p class="text-sm text-indigo-700 font-medium">กรอกรายรับจริงรายเดือนเพื่อคำนวณกำไรสุทธิ 4 ไตรมาส</p>
@@ -239,39 +218,25 @@
             <div class="space-y-3">
                 <p class="text-sm font-medium text-gray-700 mb-1">กรอกรายรับจริง (บาท) แยกรายเดือน:</p>
                 
-                <!-- ADJUSTED GRID LAYOUT FOR BETTER INPUT VISIBILITY -->
                 <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-4" id="monthlyInputGrid">
-                    <!-- Input 1: Jan (ใช้ค่าเริ่มต้นที่เหมาะสม) -->
                     <div><label for="actualJanRevenue" class="block text-xs font-medium text-gray-500">ม.ค.</label><input type="number" id="actualJanRevenue" value="3720" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ม.ค." oninput="calculateActualAnnualRevenue(true)" disabled></div>
-                    <!-- Input 2: Feb -->
                     <div><label for="actualFebRevenue" class="block text-xs font-medium text-gray-500">ก.พ.</label><input type="number" id="actualFebRevenue" value="3360" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ก.พ." oninput="calculateActualAnnualRevenue(true)" disabled></div>
-                    <!-- Input 3: Mar -->
                     <div><label for="actualMarRevenue" class="block text-xs font-medium text-gray-500">มี.ค.</label><input type="number" id="actualMarRevenue" value="3720" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="มี.ค." oninput="calculateActualAnnualRevenue(true)" disabled></div>
                     
-                    <!-- Input 4: Apr -->
                     <div><label for="actualAprRevenue" class="block text-xs font-medium text-gray-500">เม.ย.</label><input type="number" id="actualAprRevenue" value="3000" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="เม.ย." oninput="calculateActualAnnualRevenue(true)" disabled></div>
-                    <!-- Input 5: May -->
                     <div><label for="actualMayRevenue" class="block text-xs font-medium text-gray-500">พ.ค.</label><input type="number" id="actualMayRevenue" value="3500" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="พ.ค." oninput="calculateActualAnnualRevenue(true)" disabled></div>
-                    <!-- Input 6: Jun -->
                     <div><label for="actualJunRevenue" class="block text-xs font-medium text-gray-500">มิ.ย.</label><input type="number" id="actualJunRevenue" value="3000" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="มิ.ย." oninput="calculateActualAnnualRevenue(true)" disabled></div>
 
-                    <!-- Input 7: Jul -->
                     <div><label for="actualJulRevenue" class="block text-xs font-medium text-gray-500">ก.ค.</label><input type="number" id="actualJulRevenue" value="3800" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ก.ค." oninput="calculateActualAnnualRevenue(true)" disabled></div>
-                    <!-- Input 8: Aug -->
                     <div><label for="actualAugRevenue" class="block text-xs font-medium text-gray-500">ส.ค.</label><input type="number" id="actualAugRevenue" value="3800" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ส.ค." oninput="calculateActualAnnualRevenue(true)" disabled></div>
-                    <!-- Input 9: Sep -->
                     <div><label for="actualSepRevenue" class="block text-xs font-medium text-gray-500">ก.ย.</label><input type="number" id="actualSepRevenue" value="3200" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ก.ย." oninput="calculateActualAnnualRevenue(true)" disabled></div>
                     
-                    <!-- Input 10: Oct -->
                     <div><label for="actualOctRevenue" class="block text-xs font-medium text-gray-500">ต.ค.</label><input type="number" id="actualOctRevenue" value="3600" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ต.ค." oninput="calculateActualAnnualRevenue(true)" disabled></div>
-                    <!-- Input 11: Nov -->
                     <div><label for="actualNovRevenue" class="block text-xs font-medium text-gray-500">พ.ย.</label><input type="number" id="actualNovRevenue" value="3100" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="พ.ย." oninput="calculateActualAnnualRevenue(true)" disabled></div>
-                    <!-- Input 12: Dec -->
                     <div><label for="actualDecRevenue" class="block text-xs font-medium text-gray-500">ธ.ค.</label><input type="number" id="actualDecRevenue" value="4000" min="0" step="10" class="input-style w-full text-base text-gray-800" placeholder="ธ.ค." oninput="calculateActualAnnualRevenue(true)" disabled></div>
                 </div>
 
                 <p class="text-xs text-gray-400 pt-1">รายรับรวมจะถูกนำมาหักค่าใช้จ่ายคงที่รายไตรมาส (1,375.00 บาท) ข้อมูลจะถูกบันทึกอัตโนมัติ</p>
-                <!-- Export button remains enabled for guests/unauthenticated users -->
                 <button onclick="exportDataToCSV()" 
                         class="mt-3 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition duration-150 shadow-md">
                     ส่งออกข้อมูลเป็น CSV (เปิดใน Excel ได้)
@@ -283,7 +248,6 @@
             </div>
         </section>
 
-        <!-- NEW SECTION 7: Reference Links -->
         <section class="space-y-4">
             <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2">7. เอกสารอ้างอิงและรูปภาพข้อมูล</h2>
             <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 flex justify-between items-center">
@@ -301,7 +265,6 @@
             </div>
         </section>
 
-        <!-- Login Modal (Hidden by default) -->
         <div id="authModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 hidden items-center justify-center p-4">
             <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md space-y-6">
                 <h3 class="text-2xl font-bold text-gray-800 border-b pb-2">เข้าสู่ระบบ / ลงทะเบียน</h3>
@@ -336,9 +299,7 @@
             </div>
         </div>
 
-        <!-- User ID Display for debugging/collaboration (Mandatory) -->
         <p class="text-xs text-gray-400 mt-4" id="userIdDisplay">User ID: N/A</p>
-        <!-- Security Rules Reminder -->
         <div id="securityRuleWarning" class="text-xs text-yellow-700 p-2 bg-yellow-100 border border-yellow-300 rounded-lg mt-2 hidden">
             <p class="font-bold">🚨 การแจ้งเตือนด้านสิทธิ์การเข้าถึง (Permission Issue)</p>
             <p>การบันทึก/โหลดข้อมูลล้มเหลว โปรดตรวจสอบ <span class="font-bold">1. Firebase Authentication</span> (ต้องเปิด Email/Password Sign-in) และ <span class="font-bold">2. Firestore Security Rules</span> ในโปรเจกต์ Firebase ของคุณ เพื่ออนุญาตให้ผู้ใช้ที่เข้าสู่ระบบสามารถอ่าน/เขียนข้อมูลในพาธส่วนตัวของตนเองได้</p>
@@ -360,8 +321,11 @@
         const INITIAL_INVESTMENT = 35000;
         const DAYS_PER_YEAR = 365;
         const TARGET_PAYBACK_YEARS = 2;
-        const NUMBER_OF_FUNDS = 5; // <--- CHANGED FROM 3 TO 5
-        const FUND_AMOUNT = INITIAL_INVESTMENT / NUMBER_OF_FUNDS; // 35000 / 5 = 7000.00
+        // ============================================
+        // UPDATED: Changed from 5 to 6
+        const NUMBER_OF_FUNDS = 6; 
+        // ============================================
+        const FUND_AMOUNT = INITIAL_INVESTMENT / NUMBER_OF_FUNDS; // 35000 / 6 = ~5833.33
         
         // Arrays for Month/Quarter Mapping (used in Section 6)
         const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -589,7 +553,7 @@
                 const netQuarterlyIncome = quarterlyRevenue - quarterlyExpense; // Use dynamic quarterlyExpense
                 totalNetRevenueYear += netQuarterlyIncome;
                 
-                const netIncomePerFund = netQuarterlyIncome / NUMBER_OF_FUNDS; // Use 5 funds
+                const netIncomePerFund = netQuarterlyIncome / NUMBER_OF_FUNDS; // Use 6 funds
                 
                 outputHtml += `
                     <div class="p-3 bg-white rounded-lg shadow-sm border border-gray-100">
@@ -660,7 +624,7 @@
                 totalAnnualRevenue += actualQRevenue;
 
                 const actualQNetIncome = actualQRevenue - quarterlyExpense; // Use dynamic quarterlyExpense
-                const actualQNetIncomePerFund = actualQNetIncome / NUMBER_OF_FUNDS; // Use 5 funds
+                const actualQNetIncomePerFund = actualQNetIncome / NUMBER_OF_FUNDS; // Use 6 funds
                 totalAnnualNetIncome += actualQNetIncome;
                 
                 const colorClass = actualQNetIncome >= 0 ? 'text-green-700' : 'text-red-700';
@@ -968,7 +932,7 @@
             
             fundNames.forEach((name, index) => {
                 const fundBox = document.createElement('div');
-                // Ensure layout supports 5 columns (grid-cols-5 is set in HTML)
+                // Ensure layout supports 6 columns (grid-cols-6 is set in HTML)
                 fundBox.className = 'p-2 text-center bg-gray-100 rounded-md hover:bg-indigo-100 transition duration-300 cursor-default col-span-1'; 
                 fundBox.title = `${name}: ${formattedFund} บาท`;
                 fundBox.innerHTML = `
@@ -997,7 +961,7 @@
                 editContainer.classList.remove('hidden');
 
                 inputContainer.innerHTML = '';
-                for (let i = 0; i < NUMBER_OF_FUNDS; i++) { // Loop 5 times
+                for (let i = 0; i < NUMBER_OF_FUNDS; i++) { // Loop 6 times
                     const name = fundNames[i] || `กองทุนที่ ${i + 1}`;
                     const label = document.createElement('label');
                     label.className = 'block';
